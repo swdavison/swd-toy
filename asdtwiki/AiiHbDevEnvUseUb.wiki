@@ -1,0 +1,75 @@
+= How To Update a Branch from the Trunk =
+
+In the AWIPS development environment each developer has
+his or her own development branch.  It is important that you
+keep your development branch up to date with respect to the
+trunk.  Otherwise your code might not work when it is
+finally delivered into the trunk.  Use the svn
+merge command to do that, as described below.
+
+(The svn commands used here assume that you are using
+Subversion 1.5 or later.  Merging with earlier versions
+is more complicated because Subversion does
+not keep track of the version at which branches were
+created; you must supply that information in the
+merge command.)
+
+At any time you can do a "dry run" merge to see what
+is available to be merged from the trunk into your
+development branch:
+
+{{{
+    # ----- Check your development branch out into a working copy.
+    export ROOT=http://swdavison.dyndns.org:8080/awips2_repo/AiiDh
+    svn checkout $ROOT/branches/<yourNameHere>
+
+    # ----- Dry run merge to see if there are new changes in the trunk.
+    cd <yourNameHere>
+    svn merge --dry-run $ROOT/trunk
+}}}
+
+If there is no output from the dry run merge your branch is up to
+date with respect to the trunk.  Your branch might have new code
+that the trunk does not have, but the trunk has no new code that your
+branch does not have.
+
+If you do get output it means that your branch is out of date.
+The output might look like:
+{{{
+    --- Merging r50 through r56 into '.':
+    U    AiiDhTools.tex
+}}}
+
+That would tell you that you do need to update your
+branch.  The file !AiiDhTools.tex in your working
+copy would be updated if you actually ran the merge.
+Then (as shown below) you will need to commit your
+updated working copy to update your branch.
+
+To execute the merge, leave out the dry-run option:
+{{{
+    svn merge $ROOT/trunk
+}}}
+You will see the same output you saw for the dry run.
+
+The merge operation has updated the working copy.  You would want to
+inspect the updated files to see what changed, and you might want to
+build and test the code before committing it.  When you are ready, the
+commit is straightforward:
+{{{
+    svn commit -m"Updated branch from trunk."
+}}}
+Now your branch is up to date with respect to the trunk.
+
+
+(Note that there is also an svn subcommand called "update."  That
+subcommand updates your working copy from your development branch.
+In development environments where many developers share the same
+branch the svn update command is frequently used.  In the AWIPS
+environment, where only one developer commits code to a given
+development branch, it will not be used so often.)
+
+
+
+
+AWIPS II Software Developers' Handbook (AiiHb)

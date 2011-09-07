@@ -1,0 +1,5 @@
+cd $WORKSPACE/trunk
+./build.sh
+cp AiiDh.pdf /home/swenv/swenv_progs/htdocs
+cp --recursive AiiDh /home/swenv/swenv_progs/htdocs/
+

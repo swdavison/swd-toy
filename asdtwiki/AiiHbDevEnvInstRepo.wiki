@@ -1,0 +1,164 @@
+= Create Subversion Repository and Load AWIPS II Code =
+[[PageOutline]]
+
+== Prepare AWIPS Source Code for Import into Subversion Repository ==
+
+Follow the directions in the ADE setup flow tag through the step
+where AWIPS II is built.  In the r1g1-4 ADE flow tag that step
+is on page 12 of the PDF file and is titled "Compile AWIPS II."
+Verify that the build completes successfully as described in the
+flow tag.  Then make sure that "build automatically" is turned off
+in the project menu and select "Clean..." from the project menu.
+Be sure that "Clean all projects" is selected and
+"Start a build immediately" is not checked on the Clean
+dialog.
+
+Purge from the projects directories files that we do not want to import
+into the Subversion repository:
+
+{{{
+    export PRJ_SRC=${HOME}/ade/projects
+    cd $PRJ_SRC
+    rm -rf javadocs
+    find ade awips Installer Installer-bundle-example -type d -name .svn \
+        -exec rm -rf {} \;
+}}}
+
+
+== Repository Structure ==
+
+There are various possible conventions for setting up
+the repository.  See page 123 of the Red Book.  See also
+http://www.awips2omaha.com/trac/awips/wiki/Configuring%20Subclipse for
+an indication of how the !Raytheon/Omaha development team structures
+their repository.  In our case the repository structure will look like:
+
+{{{
+    awips2_repo/
+        ade/
+            trunk/
+            tags/
+            branches/
+        awips/
+            trunk/
+            tags/
+            branches/
+        Installer/
+            trunk/
+            tags/
+            branches/
+        Installer-bundle-example/
+            trunk/
+            tags/
+            branches/
+}}}
+
+The ade, awips, Installer, and Installer-bundle-example are the
+projects from ade/projects/.  The next-level directories are:
+ *  trunk.  Reviewed and tested code.  Modified as new tasks are delivered.
+ *  tags.  Snapshots.  Created for releases or other events where it is         convenient to have a pointer to the state of the repository at that time.  Once created a tag should never be modified.
+ *  branches.  Branches for individual developers will be created under this    directory.  Typically a branch is created by an individual developer for a      specific task.  Branches are usually copied from the trunk.  After the task is  completed the branch is merged back into the trunk.  That merge constitutes     delivery of the code.  The branch is then deleted.
+
+
+== Import the Source Code ==
+
+The procedure below is for initial import of the source code.
+Please see the section titled "Administering the Software
+Development Environment" for a procedure for merging
+Raytheon deliveries after the first one into the repository.
+
+{{{
+    export REPO_DIR=$HOME/repositories
+    mkdir $REPO_DIR
+    cd $REPO_DIR
+    svnadmin create $REPO_DIR/awips2_repo
+    export PRJ_SRC=$HOME/ade/projects
+    cd $PRJ_SRC
+    export URL=file:///home/swenv/repositories/awips2_repo
+    svn import --no-ignore -m "New import" ade $URL/ade/trunk
+    svn import --no-ignore -m "New import" awips $URL/awips/trunk
+    svn import --no-ignore -m "New import" Installer $URL/Installer/trunk
+    svn import --no-ignore -m "New import" Installer-bundle-example \
+        $URL/Installer-bundle-example/trunk
+}}}
+
+We use the "no-ignore" option to svn import because there are certain
+file types that Subversion (by default) treats as build products, and
+therefore "ignores,"  that is, does not import them into the repository.
+We need those build products (third party jar files, for example)
+because they constitute part of the AWIPS configuration.
+
+Check success with
+{{{
+    svn list --depth infinity --verbose $URL
+}}}
+or
+{{{
+    svnlook tree ~/repositories/awips2_repo
+}}}
+
+In our work flow and code life cycle processes, each developer may have
+his or her own branch of the repository.  They will check code in and
+out of that branch and deliver it to the trunk only after review and
+acceptance.  Our next step is to create a developer branch for testing
+the installation.
+
+
+{{{
+    export URL=file:///home/swenv/repositories/awips2_repo
+    svn copy $URL/ade/trunk $URL/ade/branches/developer --parents \
+        -m "Creating developer branch"
+    svn copy $URL/awips/trunk $URL/awips/branches/developer --parents \
+        -m "Creating developer branch"
+    svn copy $URL/Installer/trunk $URL/Installer/branches/developer --parents \
+        -m "Creating developer branch"
+    svn copy $URL/Installer-bundle-example/trunk \
+        $URL/Installer-bundle-example/branches/developer --parents \
+        -m "Creating developer branch"
+}}}
+
+Now we will make the repository visible to the Apache httpd web server,
+so that remote users can view it in web browsers and so that httpd can
+be used as the Subversion server.
+
+Make a symbolic link in the htdocs directory pointing to the repository:
+{{{
+    ln -s ~swenv/repositories/awips2_repo $SWENV_PROGS/htdocs/awips2_repo
+}}}
+
+Add the following lines to the end of $SWENV_PROGS/conf/httpd.conf:
+{{{
+<Location /awips2_repo>
+   DAV svn
+   SVNPath /home/swenv/swenv_progs/htdocs/awips2_repo
+</Location>
+}}}
+
+Start or restart httpd with
+{{{
+    $SWENV_PROGS/bin/apachectl start
+}}}
+or
+{{{
+    $SWENV_PROGS/bin/apachectl restart
+}}}
+
+Open a browser and load the URL
+{{{
+    http://svnhost:8080/awips2_repo
+}}}
+You should now be able to navigate the repository and view
+files in the browser.
+
+You should also be able to use the http protocol to check code out:
+{{{
+    mkdir tmp
+    cd tmp
+    svn checkout http://svnhost:8080/awips2_repo/ade/trunk/Installer.ade
+}}}
+
+
+
+AWIPS II Software Developers' Handbook (AiiHb)
+
+

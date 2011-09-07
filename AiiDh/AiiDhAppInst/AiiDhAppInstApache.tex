@@ -1,0 +1,117 @@
+
+\section{Install Apache httpd}
+
+Source file: AiiDhAppInstApache.tex
+
+We use the Apache httpd web server as both the Subversion server
+and the Trac server.  Note that we must use Apache 2 or
+later.  There are no Subversion plugins for the Apace 1
+series.
+
+\begin{verbatim}
+
+    export SWENV_PROGS=$HOME/swenv_progs
+    mkdir $SWENV_PROGS
+    cd $SWENV_PROGS
+    mkdir bin  etc include lib libexec sbin share src
+
+    export TMP_BLD_DIR=${HOME}/tmpblddir
+    mkdir $TMP_BLD_DIR
+
+    cd $TMP_BLD_DIR
+    tar zxf $DOWNLOADS/httpd-2.2.15.tar.gz
+    cd httpd-2.2.15
+    ./configure --prefix=$SWENV_PROGS --with-included-apr --enable-rewrite \
+        --enable-modules=most --enable-mods-shared=most --enable-ssl  \
+        --enable-dav --enable-dav-fs --enable-dav-lock --with-port=8080 \
+        --with-sslport=8443 \
+         >& configure.out
+    make >& make.out
+    make install >& makeinstall.out
+
+    cd
+    mv $TMP_BLD_DIR tmpblddir.httpd
+
+\end{verbatim}
+
+Edit \$SWENV\_PROGS/conf/httpd.conf and make the following
+changes:
+\begin{itemize}
+
+\item
+Uncomment the ServerName line and add
+a host name or IP address in accordance with the comment in httpd.conf.
+If the server has a registered DNS name the ServerName line will look
+like:
+\begin{verbatim}
+    ServerName www.example.com:8080
+\end{verbatim}
+If the server does not have a registered domain name use the IP address.
+The ServerName line will look like:
+\begin{verbatim}
+    ServerName 123.45.67.89:8080
+\end{verbatim}
+
+\item
+Change the CustomLog and ErrorLog lines in httpd.conf to
+give the log files names indicating their origin.  The new 
+lines should be:
+\begin{verbatim}
+    CustomLog "logs/access_log.httpd" common
+    ErrorLog "logs/error_log.httpd"
+\end{verbatim}
+
+\end{itemize}
+
+Verify successful installation and startup.  Execute the command:
+\begin{verbatim}
+    $SWENV_PROGS/bin/apachectl start
+\end{verbatim}
+On a machine with a network connection to svnhost, load the URL
+http://svnhost:8080 into a browser.  You should see a web page with the
+text "It works!"
+
+You will probably want to have Apache httpd start up automatically
+when the server machine is rebooted.  That must be set up by the
+root user.  Please see the section titled "Final System Administration
+Tasks"
+
+The logs must be rotated and purged.  One common way to do
+that is to use the system logrotate facility.  That must be
+set up by the root user.  If you plan to do it that way,
+please see the man page for logrotate.  
+
+To keep the software development environment as
+self-contained as possible, to minimize intrusion on system
+files and directories, and to minimize activities that must
+be performed by the root user we use a different method.
+A line in the crontab file for user swenv
+periodically runs a script to rotate the log files.  Install
+the rotation script with the following commands:
+\begin{verbatim}
+    mkdir -p $SWENV_PROGS/local/bin
+    cd $SWENV_PROGS/local/bin
+    tar zxf $SWENV_DOWNLOADS/swenv_utils.tgz rotateHttpdLogFiles.py
+\end{verbatim}
+
+To add the new cron, make a temporary copy of the crontab file with 
+the command
+\begin{verbatim}
+    crontab -l > crontab.tmp
+\end{verbatim}
+Add a line like this at end of the file:
+\begin{verbatim}
+    47 03 * * sun $SWENV_PROGS/local/bin/rotateHttpdLogFiles.py 10
+\end{verbatim}
+
+Install the modified crontab file and delete the temporary copy:
+\begin{verbatim}
+    crontab crontab.tmp
+    rm crontab.tmp
+\end{verbatim}
+
+That line will make cron run the rotateHttpdLogFiles.py
+script every Sunday morning at 03:47.  The script will keep
+ten compressed copies of the log files.  
+
+

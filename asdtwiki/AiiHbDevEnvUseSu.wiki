@@ -1,0 +1,252 @@
+= Working with Subversion =
+[[PageOutline]]
+
+Subversion is our version control system.  It is a widely
+used free, open-source package.  There is lots of good
+documentation for Subversion:
+ * If you simply type "svn" at the command line you will get usage information  leading you into the help facility that gets installed with Subversion.
+ * There is a good book available: "Version Control with Subversion."  You can  buy a printed copy of the book, access an HTML version on line, or download it  as a PDF to refer to or print out.  In this Handbook and in web pages           discussing Subversion it is often referred to as the "Red Book".  Please see    the section of this Handbook titled "Appendix: References and Resources." for full bibliographic information and URLs.
+* Because Subversion is so widely used you can often get a quick answer to a    question by Googling.
+
+This section of the Handbook provides an overview of
+Subversion.  It is not intended to substitute for any of
+the information sources listed above.  You will find it
+well worth while to
+become familiar with those sources.
+
+Other subsections of
+the Handbook will provide cookbook-type examples of how to
+accomplish tasks that may crop up frequently in the AWIPS
+development environment.  What follows in this section is
+a quick, high-level summary to give you some context when
+you read the "How To" sections for specific tasks.
+
+We can think of Subversion as consisting of three
+components:
+
+ * Data base files containing the source code that Subversion is keeping track  of.  Those files are on the server machine.  It is best to consider those files a black-box implementation detail.  There will be little further discussion of  them in this document.  It is useful to remember, however, that a source code   file under Subversion configuration management is not associated with any       particular file in the Subversion repository.  It is a set of records in one or more data base cache files.
+ * Various server-side utility programs and API-accessible functions.  The      Subversion API is out of scope for this document.  Svnadmin and svnlook are     examples of server side utilities.  You can find examples of their usage in the section titled "Install Subversion," but they are rarely needed by ordinary     users and will not be discussed further in this section.
+ * A server program.  Discussed in this section.
+ * One or more client programs.  Those must be installed on the user's          workstation.  Discussed in this section.
+
+
+== Server ==
+
+Subversion comes with its own server (called svnserve),
+but we do not use that.  Instead, we use the Apache web
+server (httpd) as the subversion server. Httpd is
+configured to call Subversion plugins when you access the
+Subversion repository via http.  For example, if you enter
+the following URL into a web browser you will see the
+AWIPS2 repository:
+{{{
+    http://swdavison.dyndns.org:8080/awips2_repo
+}}}
+
+
+== Client ==
+
+The AWIPS project uses several client programs for Subversion:
+
+ * As indicated above, any web browser can serve as a subversion client.  It    provides a quick and easy way to access the "head" revision of the software     under control.  (The head revision is the most recent revision.)  But that's    all you can do with the web browser.  With the web browser you cannot edit code and you cannot see old versions.
+ * Trac incorporates a Subversion client.  At the top of most Trac web pages    you will see a button labeled "Browse Source."  That will take you into the     repository.  It only provides read access, but you can see old revisions, commit comments, and other information.
+ * The version of Eclipse delivered by Raytheon as part of the ADE includes a   Subversion client packaged as a plugin called Subclipse.  That allow you to use the Eclipse GUI to access the repository, including checking code in and out    and other capabilities.
+ * Subversion provides a command line client called svn.  You will see examples of svn usage in the rest of this section.
+
+
+
+== Checkout and Commit (Checkin) ==
+
+Unlike other commonly used revision control systems like
+CVS or RCS, Subversion does not (in the course of routine
+usage) lock source code files.  If you execute the following
+commands:
+{{{
+    mkdir ~/workarea.tmp
+    cd ~/workarea.tmp
+    export REPO_URL=http://swdavison.dyndns.org:8080/awips2_repo
+    export HBK_URL=$REPO_URL/AiiDh/branches/sandbox
+    svn checkout $HBK_URL
+}}}
+
+you get a copy of the source code for this Handbook in the
+workarea.tmp/sandbox directory.  In Subversion documentation
+the workarea.tmp/sandbox directory is called a "working
+copy."
+On the server side, the code is
+not locked.  The only record of the access will be in the
+Apache httpd log.  Subversion will keep no record of it.
+Other developers can check it out without any difficulty,
+and without any notification that you have checked it out.
+This is an intentional design feature of Subversion.  The
+reasoning behind it is discussed in the Red Book.
+
+(The checkout procedure
+described above involves a lot of typing.  In actual
+routine usage, as those experienced with development on
+Unix platforms are aware, most of that typing would be
+taken care of by environment variable and alias
+definitions in the developer's environment setup files.)
+
+Now you can edit the source code files for the handbook and,
+when you are finished, you can check them in:
+{{{
+    svn commit -m"Example"
+}}}
+(The above command assumes that your CWD is
+~/workarea.tmp/sandbox.)
+
+
+== Working Copies ==
+
+You will notice that the commit command did not contain
+the repository URL.  How did svn know where to commit the
+changes?  The answer is that the sandbox subdirectory,
+created by the checkout command, contains metadata files
+in a subdirectory called .svn.  Every source code directory
+and subdirectory in a working copy contains a .svn
+subdirectory.  Files in that directory contain
+information about the repository from which
+the working copy was checked out.
+
+One consequence of this arrangement is that only
+directories, not individual files, can be checked out.
+Individual files can be committed.
+
+You can go ahead and execute the checkout and commit commands
+above if you are interested.  The "sandbox" repository
+directory, as its name indicates, is provided for
+experimentation.  If it gets too messed up Subversion
+provides easy ways to restore it to a sane condition.
+
+== Branches ==
+In Subversion jargon, the sandbox repository directory is
+called a branch.  In the AWIPS development environment
+every developer working on a project has his or her
+own branch.  The Subversion name of the Handbook project
+is AiiDh.  That project has a subdirectory called branches.
+Every developer working on the Handbook will have
+a branch under that.  Indeed, you
+might have more than one branch if you are working on
+several tickets and want to keep the work separate.
+
+Since Subversion stores all branches by deltas
+(differences) they do not take up much space.  Since you
+have your own branch, you can feel free to check your code
+in whenever you choose without worrying about breaking
+the build for other developers.  That way you have access to all your old
+versions as well as taking advantage of the main
+repository's backup facilities.
+
+
+== Trunk ==
+
+Most repository projects contain a subdirectory called
+"trunk".  The trunk subdirectory contains reviewed,
+"official" code.  Branches are created by making copies
+of the trunk, or of other branches.
+Please be sure not to check code in to
+the trunk without going through the proper reviews first.
+
+If you accidentally check code into the trunk, please
+notify the Repository Manager or the Development Manager
+right away.  It's very easy to "revert" the trunk back to
+its earlier state, so such accidents are not big deals as
+long as they are promptly corrected.
+But if they are left uncorrected then other changes may be
+checked in on top of them.  After that has happened it's a
+lot more work to disentangle the intentional and the
+accidental updates.
+
+As described above, when you commit code back to the
+Subversion repository it goes back in to the part of the
+repository from which it was checked out.  Since you
+should not routinely check code in to the trunk, you
+should avoid checking code out of the trunk.  If you want
+a copy of the code in the trunk you should create a branch
+and check the code out of that branch.  See the "How To"
+sections of this manual for a description of how to do
+that.
+
+Remember, by the way, that if you just want to look at the
+code in the trunk you can do that through the read-only
+interfaces provided by the web browser and by Trac.
+== The Svn Client ==
+
+The svn client utility has a large number of subcommands.  The
+Red Book has a reference section describing all of them.  Two
+very useful subcommands are "info" and "status".
+
+If you type "svn info" in a subdirectory created by an
+"svn checkout" command, svn will look in the metadata directory
+(.svn) and provide information about the working copy,
+including the repository branch from which it came.
+
+If you type "svn status" in a Subversion working copy
+directory, you will see a list of some of the files in the
+directory.  Here is an example:
+{{{
+    $ svn status
+    ?       AiiDh.out
+    ?       AiiDh.pdf
+    ?       globalRevisionNumber.tex
+    ?       builddate.tex
+    ?       AiiDh.log
+    ?       AiiDh.toc
+    ?       AiiDh.aux
+    ?       AiiDh
+    M       AiiDh.tex
+}}}
+
+The files flagged by question marks are "unversioned files."  Those
+are files that have never been checked in to subversion.  If you do
+an "svn commit" operation those files will not be checked in.  In
+this case we would not want those files to be checked in: They are
+build products created by the build script and pdflatex processors
+when the Handbook was built from source.  If you create a new file
+that you want checked in, you must use the "add" subcommand.  For
+example:
+{{{
+    svn add NewClass.java
+}}}
+That command will make svn update the metadata so that when you
+later do an "svn commit" command the new Java source code file
+will be added to the repository.
+
+The file flagged with an "M" above has been modified since it
+was checked out.  When you commit the directory the new version of
+the file will go into the repository.
+
+
+== Warning: Subversion Never Forgets ==
+
+Subversion never forgets.  That's good, because it makes it easy
+to correct most accidental commit actions.  But it is {\em very} difficult
+to {\em completely} remove anything from a Subversion repository.
+There is a delete command.  That command creates a new version of the
+repository without the deleted item.  But the item is still there in
+previous versions of the repository.  So please take care
+never to commit documents that should be private (password
+files, personal files you do not want others to read, etc.)
+
+Subversion stores source code files in compressed form as
+data base entries.  The data base schema is a "black box" in
+the sense that it is an implementation detail with no
+official documentation.  Removing a file (or data from a
+file)  completely would
+require using SQL commands to delete certain
+fields or rows, and updating whatever other tables might
+refer to them.
+
+It is very likely that almost all of the AWIPS code base will
+eventually be
+released for public use.  But AWIPS does contain some restricted
+code that the Government is permitted to use only under specific
+licensing agreements.  We must take care not to publish any
+repository which
+has ever held any of that code.
+
+
+AWIPS II Software Developers' Handbook (AiiHb)
+
+

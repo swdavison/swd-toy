@@ -1,0 +1,175 @@
+
+\section{Set Up Subversion Access Control}
+
+Source file: AiiDhAppInstSvnac.tex
+
+
+As it is now set up, our Subversion repository is open to anyone who can
+make an http connection to svnhost.  In this section we make configuration
+changes that will limit that access.  There are two ways to do that:
+\begin{itemize}
+\item
+We can grant read or write authorization for the entire repository 
+to specific users or groups; or
+\item
+We can grant read or write authorization for specific directory
+paths to specific users and groups.
+\end{itemize}
+
+The Red Book recommends repository-wide access control.  That is
+the first method discussed below.
+
+\subsection{Repository-Wide Access Control}
+
+
+\begin{verbatim}
+Edit $SWENV_PROGS/conf/httpd.conf.  Change the Location element at the 
+end of the file.  The original Location element is:
+<Location /awips2_repo>
+   DAV svn
+   SVNPath /home/swenv/swenv_progs/htdocs/awips2_repo
+</Location>
+
+The new Location element should be:
+<Location /awips2_repo>
+   DAV svn
+   SVNPath /home/swenv/swenv_progs/htdocs/awips2_repo
+  
+   # How to authenticate a user
+   AuthType Basic
+   AuthName "AWIPS Developement"
+   AuthUserFile /home/swenv/swenv_progs/conf/svn-auth-file
+
+   # For operations other than these, require authenticated user.
+   <LimitExcept GET PROPFIND OPTIONS REPORT>
+      Require valid-user
+   </LimitExcept>
+</Location>
+
+The new Location element tells httpd that access to anything under
+awips2_repo is limited to valid users, unless that access is one of the
+operations specified in the LimitExcept element.  The operations listed
+in LimitExcept are Subversion operations that read the repository.
+So the effect of the new Location element is to allow anyone to read
+the repository while only valid users can write to it.
+
+There are several possible schemes for repository access control.  The one
+suggested here is adapted from an example in the Red Book subsection
+on authorization options for the httpd server in the chapter on server
+configuration.  Please see that subsection for more possibilities.
+
+Now we must create some valid users.  Execute the commands:
+    htpasswd -cm $SWENV_PROGS/conf/svn-auth-file homer
+    New password: doh!
+    htpasswd -m $SWENV_PROGS/conf/svn-auth-file marge
+    New password: Homer!
+    htpasswd -m $SWENV_PROGS/conf/svn-auth-file bart
+    New password: NotMe!
+After each command you will get the standard prompt to set a new password
+by entering it twice.  Note that the first command has an extra option.
+That option causes svn-auth-file to be created.  After executing those
+commands users homer, marge, and bart will be able to commit code to
+the repository.
+
+Restart httpd:
+apachectl restart
+
+Verify that the access control is working.  Log in to some machine
+with http access to svnhost.  The user name does not matter.
+mkdir tmp
+cd tmp
+svn checkout http://svnhost:8080/awips2_repo/ade/trunk/Installer.ade
+
+For read operations (like checkout) access is unrestricted, so the above
+command should complete without a password challenge.
+
+Now do:
+cd Installer.ade
+echo "#  New line" >> eclipse.sh
+svn commit eclipse.sh -m"test checkin"
+
+You will be challenged for a password.  The system will assume that
+your Unix login name is your Subversion account name.  When the password
+authentication fails for that user you will be prompted for a user name.
+Enter homer, marge, or bart and the associated password.  The commit
+should be accepted.
+
+Subversion will save your user name and password in ~/.subversion,
+and will not prompt you on subsequent commits.
+
+Try the same operation from Eclipse.  Assuming your Eclipse workspace
+is linked to the Subversion repository as described earlier, do the
+following: Go to the Package Explorer view.  Navigate to the source code
+file you want to check in.  Right click on that file.  Mouse over "Team"
+on the context menu.  Click "Commit..." on the Team submenu.
+
+You should get a password challenge.
+
+\end{verbatim}
+
+\subsection{Path-Based Access Control}
+
+\begin{verbatim}
+
+Depending on your situation, you may need to set up path-based
+access control.  That will allow read or write access to be
+granted to specific users for specific directory hierarchies
+in the repository.  Please see the Red Book for a discussion of
+some of the drawbacks of using path-based access control.
+
+TBD:
+I'm not sure pbac is really ready for prime time.  The
+structure of the authorization file is tricky, with
+authorizations being inherited from higher level directories,
+over-ridden or not over-ridden by later directives, and
+being set to defaults in ways I don't understand.  It may
+just be that -- that I don't understand the authorization file --
+or there may be bugs in the implementation.  In any case, it
+seems to play especially poorly with Hudson.  
+
+It also seems to cause checkout failures if the first item
+in the set to be checked out does not require authorization.
+Then no authentication challenge is given at the outset, but
+that's the only time httpd will issue an authentication
+challenge.  So if later in the checkout operation there is an
+item that does require authorization the checkout fails 
+because there is no authenticated user.
+
+If you need that level of access control, you need to make
+two changes to the setup described here:
+1.  You need a different Location block.
+2.  You need to install an authorization file.
+
+The Location block would look like this:
+<Location /awips2_repo>
+   DAV svn
+   SVNPath /home/swenv/repositories/awips2_repo
+
+   # ----- Access control policy (authorization file)
+   AuthzSVNAccessFile /home/swenv/swenv_progs/conf/svn-access-file
+
+   # ----- First try anonymous access, identify and authenticate
+   # -----    if request requires authorization.
+   Satisfy Any
+   Require valid-user
+
+   # ----- How to authenticate a user.
+   AuthType Basic
+   AuthName "AWIPS Development"
+   AuthUserFile /home/swenv/swenv_progs/conf/svn-auth-file
+
+   # For operations other than these, require authenticated user.
+   <LimitExcept GET PROPFIND OPTIONS REPORT>
+      Require valid-user
+   </LimitExcept>
+</Location>
+
+You can see that the Location block contains a reference to 
+an "AuthzSVNAccessFile".  Please look at the file svn-access-file
+in the swenv_utils.tgz tarball to see an example of the 
+authorization file.  Also please read the relevant section of the
+Red Book.
+
+
+\end{verbatim}
+

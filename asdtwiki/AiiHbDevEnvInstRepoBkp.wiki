@@ -1,0 +1,32 @@
+= Set Up Repository Backups =
+
+
+Set up repository  backups.  To do that you will install a script
+to make the backup and a new line in the crontab to run the
+backup script.  To install the backup script:
+{{{
+    cd $SWENV_PROGS/local/bin
+    tar zxf $SWENV_DOWNLOADS/swenv_utils.tgz backUpRepository.sh
+}}}
+
+To add the new line to the cron make a temporary copy of the
+crontab file:
+{{{
+    cd
+    crontab -l > crontab.tmp
+}}}
+
+Edit crontab.tmp to add a line like this:
+{{{
+38 02,10,15,19 * * *  $SWENV_PROGS/local/bin/backUpRepository.sh > $SWENV_PROGS/logs/bur.log 2>&1
+}}}
+
+Now install the new crontab file and delete the temporary copy:
+{{{    
+    crontab  crontab.tmp
+    rm crontab.tmp
+}}}
+
+
+
+AWIPS II Software Developers' Handbook (AiiHb)

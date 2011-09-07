@@ -1,0 +1,277 @@
+= Install Hudson =
+[[PageOutline]]
+
+
+Hudson is a web application that integrates with Subversion to provide
+the following capabilities:
+ *   Start a build whenever code is committed to the Subversion repository.
+ *   Start periodic builds (for example, run a build at 0200 each morning).
+ *   Start a build remotely.  That is, an adminsitrator may load the Hudson GUI in a web browser and start a build.
+ *   Monitor builds remotely.  That is, a user may load the Hudson GUI in a web browser and see the status of active or recent builds, including success or     failure, the build log, and what prompted the build (commit of a new file,      manual action).
+ *   Send email notifications in the event of a build failure.
+
+Install Hudson by copying its war file to the bin directory and
+creating a start script:
+{{{
+cp $DOWNLOADS/hudson.war $SWENV_PROGS/bin/hudson.war
+}}}
+
+Create the script $SWENV_PROGS/local/bin/startHudson.sh as follows:
+{{{
+#!/bin/bash
+export SWENV_PROGS=$HOME/swenv_progs
+export HUDSON_WAR=$SWENV_PROGS/bin/hudson.war
+export HUDSON_LOG=$SWENV_PROGS/logs/hudson.log
+export HUDSON_HOME=$HOME/hudson_home
+export HUDSON_PORT=9080
+export JAVA_HOME=/awips2/java
+export JAVA=$JAVA_HOME/bin/java
+nohup nice $JAVA -jar $HUDSON_WAR --httpPort=$HUDSON_PORT >> $HUDSON_LOG 2>&1 &
+}}}
+
+Create the script $SWENV_PROGS/local/bin/stopHudson.sh as follows:
+{{{
+#!/bin/bash
+kill `ps -ef | grep hudson.war | grep -v grep | awk '{ print $2 }'`
+}}}
+
+Make the new scripts executable:
+{{{
+chmod +x $SWENV_PROGS/bin/startHudson.sh $SWENV_PROGS/bin/stopHudson.sh
+}}}
+
+Start Hudson:
+{{{
+$SWENV_PROGS/bin/startHudson.sh
+}}}
+
+
+Verify successful installation by loading the following URL in
+a browser:
+{{{
+    http://svnhost:9080
+}}}
+You should see the Hudson "dashboard" page with the message
+"Please create new jobs to get started."
+
+Various command line options are available for Hudson.  Please see
+the "Use Hudson" link at http://hudson-ci.org.
+
+Install a script to rotate the Hudson log files:
+{{{
+    cd $SWENV_PROGS/local/bin
+    tar zxf $SWENV_DOWNLOADS/swenv_utils.tgz rotateHudsonLogFiles.py
+}}}
+
+Add a line to the swenv crontab to run the script.  Make a
+temporary copy of the swenv crontab:
+{{{
+    cd
+    crontab -l > crontab.tmp
+}}}
+
+Edit crontab.tmp and add the following line:
+{{{
+49 03 * * sun $SWENV_PROGS/local/bin/rotateHudsonLogFiles.py 10 > $SWENV_PROGS/ logs/rotateHudsonLogFiles.log 2>&1
+}}}
+
+Install the modified crontab file and delete the temporary copy:
+{{{
+    crontab crontab.tmp
+    rm crontab.tmp
+}}}
+
+
+Set up access controls for Hudson as follows:
+[[Br]]
+    dashboard->Manage Hudson->Configure System->Enable Security->
+[[Br]]
+    Hudson's own user database->Matrix-based security
+[[BR]]
+Check "Read" under "Overall" for Anonymous user.
+[[BR]]
+Check "Read" and "Build" under "Job" for Anonymous user.
+[[BR]]
+Add a user name, say "homer" and click all the boxes for homer
+to authorize him to perform all operations.
+[[BR]]
+Scroll to the bottom of the page and click "Save".
+
+You have now authorized user homer to perform all actions, including
+administrative actions.  But the user does not yet exist.  Return
+to the Hudson dashboard, click "Sign Up", and fill in the form for
+user homer.
+
+Now user homer can log in and administer the Hudson installation.
+
+Anyone who loads the top-level Hudson GUI can set up an account, but
+the new users will only have the priveleges of the anonymous user until
+user homer (or some other user with administrative privileges) goes to
+the configuration screen:
+{{{
+    dashboard->Manage Hudson->Configure System
+}}}
+adds that user and authorizes that user for specific operations.
+
+Hudson has its own user data base separate from Unix or httpd.
+Only administrators (those who will be setting up new Hudson
+builds) will need Hudson accounts.  Developers can use Hudson to
+check the status of builds without logging in.
+
+Working as user homer or some other user with appropriate authorization,
+carry out the following steps to set up the build.  Please see the Hudson
+documentation referenced above for other ways to do it.  Where a GUI
+navigation sequence starts with "Hudson", start from the main Hudson
+dashboard (http://svnhost:9080).
+
+Set Hudson to run only one build at a time.  We do this because we will
+have several jobs using the same workspace and they might otherwise
+interfere with each other.
+
+{{{
+Hudson -> Manage Hudson -> Configure System ->
+Set "# of executors" to 1.  Click "Save" at the bottom of the GUI.
+
+Set up a job to build CAVE.  We will build it from the developer
+branch of SVN.
+
+Hudson -> New job
+Set Job name CAVE_developer.
+Select "Build a free-style software project.
+Click OK.
+Return to the Hudson dashboard.
+
+Hudson -> CAVE_developer -> Configure
+Select  Subversion under Source Code Management
+Enter the string "http://svnhost:8080/awips2_repo/awips/branches/developer"
+in the repository URL keyin.
+Under "Build Triggers" select "Poll SCM."  Do not enter anything
+in the "Schedule" text field that appears.
+
+Under "Build" click "Add build step" and then "Execute shell."  Enter
+the following shell commands in the text field that appears:
+    cd $WORKSPACE/developer/build
+    export PATH=/awips2/java/bin:${PATH}
+    sh build.sh -eclipse=$WORKSPACE/developer/uframe-eclipse
+
+Click "Save" at the bottom of the GUI.
+}}}
+
+We are now set up for manual (that is, non-automated) builds via
+Hudson.  There are three ways to start a build:
+ 1. Click "Build now" on Hudson's CAVE_developer project page.
+ 1. Load the URL http://svnhost:9080/job/CAVE_developer/build
+ 1. Load the URL http://svnhost:9080/job/CAVE_developer/polling
+
+Click "Build now."  A box labeled "Build History" appears with a date,
+time, and build number.  Click on the date and time to get to the
+build information page.  Then click on "Console Output." You will see
+Subversion output indicating that the source code is being checked out
+by Hudson in preparation for the build.
+
+Create a Hudson job to build EDEX:
+{{{
+Hudson -> New Job
+Job name: EDEX_developer
+Select "Copy existing job", Copy from CAVE_developer.
+OK
+Return to the Hudson dashboard.
+
+Hudson -> EDEX_developer -> Configure -> Advanced Project Options ->
+Use Custom Workspace.
+Directory:  $HUDSON_HOME/jobs/CAVE_developer/workspace
+
+Under "Build" in the "Execute shell" text input area, change the first
+command (the cd command) to:
+    cd $WORKSPACE/developer/build.edex
+Click Save at the bottom of the GUI.
+
+Create a Hudson job  to build RCM:
+Hudson -> New Job
+Job name: RCM_developer
+Select "Copy existing job", Copy from EDEX_developer.
+OK
+Return to the Hudson dashboard.
+
+Hudson -> RCM_developer -> Configure
+Under "Build" in the "Execute shell" text input area, change the
+first command (the cd command) to:
+    cd $WORKSPACE/developer/build.rcm
+Click Save at the bottom of the GUI.
+}}}
+
+
+
+== Setting up Automated Builds in Hudson ==
+
+TBD:  Don't do it this way.  We do not want Hudson starting a
+build after every checkin.  Instead, set it up so that Hudson
+checks Subversion for updates periodically (every hour, say)
+and runs a build if there has been a change since the last
+build.
+
+
+We use Subversion's "post commit hooks" feature to set up
+automated builds in Hudson.
+
+{{{
+cd ~/repositories/awips2_repo/hooks
+cp post-commit.tmpl post-commit
+chmod +x post-commit
+
+Edit file post-commit.  Delete the mailer.py command at the bottom
+and add the commands:
+    wget -q -O /dev/null http://svnhost:9080/job/CAVE_developer/polling
+    wget -q -O /dev/null http://svnhost:9080/job/EDEX_developer/polling
+    wget -q -O /dev/null http://svnhost:9080/job/RCM_developer/polling
+}}}
+
+The wget command uses the http protocol to fetch a file.  In this case
+the effect (on Hudson) is the same as loading the URL in a web browser.
+Since we are using the "polling" target, Hudson will not do a build
+unless there have been source code changes since the last build.  So,
+for example, if code has been committed to the trunk of the Subversion
+repository the post-commit script will be executed.  But Hudson will
+find no changes in the developer branch, which is the one linked to the
+CAVE_developer, EDEX_developer, and RCM_developer jobs.
+
+If we want Hudson to kick off a CAVE build after code is committed to the
+trunk, we can create a new Hudson job called (for example) CAVE_trunk
+and link it to the trunk of the Subversion repository.  Then we could
+add the line:
+{{{
+    wget http://svnhost:9080/job/CAVE_trunk/polling
+}}}
+to the list of commands above.
+
+After any commit to any part of the repository all the wget commands in
+post-commit get executed.  But because we are using the URL for polling,
+Hudson will only execute a build if the relevant part of the repository
+has changed.
+
+Verify that the automated build system works.  Get the Hudson dashboard
+visible in a browser window.  If there is a link "ENABLE AUTO REFRESH"
+in the upper right corner click on it.  Then check out some code, alter
+it, and check it back in:
+
+{{{
+    mkdir tmp
+    cd tmp
+    export ROOT=http://svnhost:8080/awips2_repo/awips/branches/developer
+    export DIR1=com.raytheon.uf.viz.core/src/com/raytheon/uf/viz/core
+    export DIR2=localization
+    export URL=$ROOT/$DIR1/$DIR2
+    svn checkout $URL
+    cd localization
+    echo "// New line in the file" >> ConnectivityPreferenceDialog.java
+    svn commit ConnectivityPreferenceDialog.java -m"testing autobuild"
+}}}
+
+You will see the Hudson dashboard show that a new build is in progress.
+If you navigate to the build page you can see that it was a change to
+!ConnectivityPreferenceDialog.java that caused the build to start.
+
+
+AWIPS II Software Developers' Handbook (AiiHb)
+
+

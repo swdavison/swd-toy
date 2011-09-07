@@ -1,0 +1,195 @@
+
+\subsection{How to Merge a New Raytheon Delivery into the Repository}
+
+Source file: AiiDhSwEnAdRd.tex
+
+From time to time the AWIPS main contractor delivers a
+new version of the software.
+There will be files that have been modified both by the
+contractor and by other developers.  We want to minimize the
+work required to resolve conflicts and merge those files.
+In particular, we do not want to have to merge the same set
+of changes repeatedly, at each new delivery.
+
+The Red Book discusses that problem in the section titled
+``Vendor Branches.''  The procedure presented here follows that 
+approach.  If you don't know what ``branch,'' ``trunk,'' and ``tag''
+mean in the context of Subversion you should probably read 
+the section of this document titled ``Working with Subversion''
+before reading this section.
+
+Here is a high-level view of the procedure:
+\begin{enumerate}
+\item
+We maintain what amounts to a separate trunk for the
+vendor.  In the Red Book description and in the discussion
+that follows it is called the ``current'' branch.
+\item
+With each vendor delivery we update the current branch to 
+reflect that delivery.  Note that the current branch only
+contains changes made by the vendor.
+\item
+With each vendor delivery we create a tag from the current
+branch: a snapshot of the branch after that delivery.
+\item
+With each vendor delivery we use Subversion's merge facility
+to merge into a working copy of our trunk the changes the 
+vendor has made since the previous delivery.
+\item
+After resolving any conflicts and performing all regression
+tests we commit the working copy back to the trunk.  
+\end{enumerate}
+
+Consider the repository structure shown below.  It is
+similar to the structure shown in the section titled
+``Create Subversion Repository and Load AWIPS II Code''
+but it contains a new high-level directory called
+``vendor.''  The vendor directory contains a subdirectory
+for each project we have under version control.  Each of
+those projects contains a subdirectory called ``current.''
+The current directory is similar to the trunk directory,
+except that it contains only changes made by the vendor, not
+changes made by any other development organization.
+
+The other directories at the same level as current (r1g1 and
+r1g1-4 in the example below) are tags.  While the contents
+of the current directory change with each release, the other
+directories (r1g1, r1g1-4, etc.) are static, reflecting the
+contents of specific deliveries.  For each new delivery we
+will get another such directory tagged with that delivery's
+name.
+
+The example structure below shows a situation in which the 
+first vendor delivery was r1g1 and the second was r1g1-4.
+The example reflects the situation after integration of the 
+r1g14 delivery.
+
+\begin{verbatim}
+    awips2_repo/
+        vendor/
+            ade/
+                current/
+                r1g1/
+                r1g1-4/
+            awips/
+                current/
+                r1g1/
+                r1g1-4/
+            Installer/
+                current/
+                r1g1/
+                r1g1-4/
+            Installer-bundle-example/
+                current/
+                r1g1/
+                r1g1-4/
+        ade/
+            trunk/
+            tags/
+            branches/
+        awips/
+            trunk/
+            tags/
+            branches/
+        Installer/
+            trunk/
+            tags/
+            branches/
+        Installer-bundle-example/
+            trunk/
+            tags/
+            branches/
+\end{verbatim}
+
+
+\subsubsection{Create Current Branch and First Tag}
+
+You might do this step when you import the first delivery (r1g1
+in this example) into the repository, or you might do it later.
+If you do it later (as this example assumes) you must identify
+the repository revision number at which the initial vendor delivery
+had been imported but no local changes had been made.  In this
+example we assume that is revision four.
+
+Do this for each of the four projects in the ade/projects
+directory: ade, awips, Installer,
+Installer-bundle-example.  In this example we step through the
+procedure for the ade project.
+
+Create the original current branch and the r1g1 tag for the ade project.
+Both will be copies of r4 of the corresponding trunk.  This is a one-time
+operation.  It will not be repeated for new deliveries from Raytheon.
+
+\begin{verbatim}
+export URL=http://swdavison.dyndns.org:8080/awips2_repo
+svn copy -r 4 $URL/ade/trunk $URL/vendor/ade/current --parents \
+    -m "Creating current branch"
+svn copy -r 4 $URL/ade/trunk $URL/vendor/ade/r1g1 --parents \
+    -m "Creating r1g1 tag"
+\end{verbatim}
+
+
+\subsubsection{Update Current Branch with New Delivery and Create Tag}
+
+Update the ``current'' branch for ade with the ade project
+from r1g1-4 and create the r1g1-4 tag.  
+Use the svn\_load\_dirs.pl
+helper script for this as described in the Red Book.  In the 
+commands below the environment variable R1G14 points to a ``cleaned''
+version of the ade/projects/ade directory as installed in 
+accordance with the ADE flowtag.  (By ``cleaned'' I mean that 
+we have removed files and directories we don't want under version
+control, like the .svn directories.)
+
+\begin{verbatim}
+export URL=http://swdavison.dyndns.org:8080/awips2_repo
+export SLDDIR=/home/swenv/swenv_progs/contrib/client-side/svn_load_dirs
+export SLD=$SLDDIR/svn_load_dirs.pl
+export R1G14=$HOME/ade.r1g1-4.cleaned
+$SLD -t r1g1-4 $URL/vendor/ade current $R1G14
+\end{verbatim}
+
+\subsubsection{Prepare for the Merge}
+
+Before proceeding, make sure that the trunk is up to date.
+That is, reintegrate developer branches into the trunk.
+(See the section titled ``How To Deliver Code to the Trunk.'')
+Developers who do not reintegrate their branches into the trunk
+at this stage will have a lot more work to do to deliver their
+code later on.
+
+As usual when reintegrating development branches, delete them after
+the reintegration.
+
+\subsubsection{Merge Vendor Changes into Working Copy of Trunk}
+
+Make a working copy of the trunk.
+
+\begin{verbatim}
+svn checkout $URL/ade/trunk trunk_wc
+\end{verbatim}
+
+Merge the differences between the r1g1 tag and the current branch
+(which is up to date with r1g1-4) into the working copy of the trunk.
+
+\begin{verbatim}
+svn merge    $URL/vendor/ade/r1g1     \
+             $URL/vendor/ade/current  \
+             trunk_wc
+\end{verbatim}
+
+\subsubsection{Resolve Conflicts, Test, Commit}
+
+Resolve any conflicts between their changes and our changes.
+This, of course, is the hard part.  Test to make sure everything 
+works.
+
+Finally, commit the working copy back into the trunk.
+
+\begin{verbatim}
+cd trunk_wc
+svn commit -m"Merging Raytheon delivery r1g1-4 into trunk"
+\end{verbatim}
+
+
+

@@ -1,0 +1,124 @@
+
+\chapter{AWIPS Architecture and Implementation Guide}
+
+This section provides guidance to developers on how to
+implement new functionality for AWIPS.  It includes:
+\begin{itemize}
+\item
+A high-level view of the AWIPS architecture;
+\item
+Case studies -- complete implementations of typical
+functionality;
+\item
+Interface descriptions;
+\item
+How to find utilities and libraries.
+\end{itemize}
+
+
+\section{High-Level View of AWIPS Architecture}
+
+There must be other documents that describe this in detail,
+and this section might reference them.
+But the main components of the architecture should be described here.
+
+\begin{itemize}
+\item What are the major architectural components of AWIPS?
+\item In the context of CAVE, what is a plugin?
+\item In the context of EDEX, what is a plugin?  
+\item What does the ESB do in AWIPS2?
+\item What components are re-wrapped legacy code?
+\item And so on
+\item And so forth
+\end{itemize}
+
+
+\section{Data Ingest and Access}
+
+What do you have to do to add a new set to AWIPS2?  Ingest?  Storage? 
+Access?  Display?  Notifications?  Ingest monitoring and alarming?
+
+\section{Command Line Interface}
+
+CLI Capabilities.  
+
+\section{Event Handling}
+
+Describe messaging capability that delivers system and user 
+events such as GUI actions, grid changes, error messages, 
+text product completion and other internal and external events.
+
+How processes register for event notifications.
+
+Mouse events - Examples of how A-II handles mouse events and 
+context-sensitive mouse events, in particular.
+
+Keyboard accelerators.
+
+Event notification for display changes - Pane swaps, changing frame 
+count, display layers.
+
+
+\section{CAVE Plugins}
+
+How to create a CAVE plugin.  An important part of this section 
+will be at least one low level, detailed, step-by-step procedure for 
+creating an example plugin.  But the section needs to contain much more 
+than that.  In addition to the detailed procedure it must contain a 
+coherent, complete description of the architecture within which CAVE 
+plugins exist.  Files must be identified and their purposes explained.
+
+
+\section{EDEX Plugins}
+
+Same kind of content as the subsection on CAVE Plugins.
+
+
+\section{GUI Style and API}
+
+TBD:  Not sure what kind of thing goes in here.  Steve mentioned 
+"GUI API".  The API for constructing GUIs is really Eclipse
+and the Standard Widget Toolkit (SWT).  There may be some
+AWIPS-specific GUI APIs.  For example to add an item to a
+data selection menu.  Might also be useful to put in some
+``style'' guidance similar to the old Motif Style Guide,
+which described provided information to standardize look and
+feel and promote usability in Motif GUIs.
+
+TBD: How to add online help.  Adding a help option on the main
+menu bar.  Adding a help button on a widget.
+
+
+\section{Hydromet Libraries}
+
+TBD:  Best not to list specific functions or files here.  It 
+would be hard to keep it up to date.  Better to give a high
+level description of the architecture of the hydromet libraries
+and any commonality there might be in their interfaces.  Then 
+provide some kind of pointer into the code.  Maybe one or more
+package names?
+
+\section{Coordinate Transformations}
+
+TBD: As for hydromet libraries.  High-level discussion, direct
+people to code for listings of functions and interfaces.
+
+\section{Units and Unit Conversions}
+
+TBD: As for hydromet libraries.  High-level discussion, direct
+people to code for listings of functions and interfaces.
+
+\section{Image Processing}
+
+TBD: As for hydromet libraries.  High-level discussion, direct
+people to code for listings of functions and interfaces.
+
+\section{Errors, Exceptions, and Logging}
+
+TBD: Policies, tools, etc. for handling errors, exceptions, logging.
+
+
+
+
+
+

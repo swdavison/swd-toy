@@ -1,0 +1,61 @@
+
+
+\section{Hardware, Software, Networking}
+
+Source file: AiiDhAppInstHsw.tex
+
+On the hardware side, the development environment consists of a single
+server machine (host name svnhost in this document) and several developer
+workstations.  Svnhost holds the Subversion repository and
+hosts the Subversion, Hudson, and Trac server processes.
+
+Those three processes could run on different machines.
+Hudson and Trac are Subversion clients.  The machines on
+which they run must be able to make an http connection with
+the machine hosting the Subversion repository.  An Apache
+httpd web server, version 2.x or greater, must run on the
+machine hosting the Subversion repository.
+
+If all server processes run on the same host, it must have sufficient disk
+storage for: 
+\begin{itemize}
+\item
+The AWIPS Subversion repository, which will include several
+branches of the source code.  (1.5 GB on the prototype
+system);
+\item
+Hudson's
+data, which includes working copies and log files from the builds.
+(7.5 GB on the prototype system);
+\item
+Trac's data, which will include the
+issue and wiki entries and any files attached to them.  (5.5 MB on the
+prototype system).
+\end{itemize}
+
+The Subversion repository takes surprisingly little space because the
+source code is compressed and the various branches are stored as deltas.
+As the figures for the prototype system indicate, Hudson is the heavy
+hitter for disk space.  The prototype figures for Trac are probably not
+useful.  In practice, Trac will probably have a many attached documents,
+some of which may be quite large.  The NCEP software development managers
+thought that 30 GB of available disk space would probably be adequate
+for the server machine.  It will probably depend on how many old builds
+Hudson is configured to store.
+
+The OS is assumed to be RHEL 5.x, or a clone thereof.
+
+The system is distributed in the sense that the developers may be working
+on machines remote from the server.  They must have TCP/IP connections
+to the server.  As described herein the two server processes, httpd and
+Hudson, run on ports 8080 and 9080 respectively.
+
+Except for the initial checkout of code, the development environment
+does not demand much bandwidth.
+
+TBD:  Installation and resource sections below specify versions.  You may
+want to try different versions (already have something on your machine,
+newer version available).  No reason not to do that.  But you may have
+to resolve version compatibility problems.  The Apache Httpd version must
+be 2.x.  The Subversion interface modules do not support Apache Httpd 1.x.
+

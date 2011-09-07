@@ -1,0 +1,101 @@
+
+
+http://www.nws.noaa.gov/ost/SEC/AE/Presentations/feb_2009/AMS%20-%20AWIPS%20SOA%20Overview%20-%20White%20Paper%20%28RHenry%29.pdf
+"OVERVIEW OF THE NEW AWIPS SOA"
+Lawson, Griffith, Tuell, Henry
+AMS February 2009.
+
+
+
+
+
+AWIPS Advanced Weather Information Processing System
+
+CAVE Common AWIPS Visualization Environment
+
+ESB Enterprise Service Bus
+
+ESRI
+
+GEMPAK
+
+GFE
+
+GIS Geographical Information System
+
+JMS Java Messaging System
+
+RCP Rich Client Platform
+
+SEDA Staged Event Driven Architecture
+
+SOA Service Oriented Architecture
+
+
+Design Patterns used in AWIPS (from AMS Lawson et al.)
+
+SOA Service Pattern
+Simplifies service interactions with application containers
+
+Canonical XML Service Interface
+Standardizes the request/response interface to SOA services
+
+Component Model
+Standard pattern for injecting new components
+
+uEngine Task Execution Pattern
+Enables system flexibility through re-use of small units
+of execution
+
+Geo Spatial Pattern
+Enables building, displaying, analysis, and querying for data
+
+Datatype Plugin Pattern
+Enables system adaptability to new data and transforms
+
+Legacy Adapter Pattern
+Enables system evolution by allowing legacy processes to run in a
+SOA
+
+Data Notification / Subscription
+Enables data driven processing and display.
+
+
+
+Services (from AMS Lawson et al.)
+
+Ingest
+Listens on an endpoint for new data and transforms the data into a messagbe
+
+Persist
+Writes ingested data to a persistent store: file system or RDBMS
+
+Index
+Indexes the metadata extracted from the ingested data into 
+a store that facilitates data searches and retrievals.
+
+Product
+Listens on an endpoint for external product requests and fulfills the 
+request with a response message.  Typically receives Action scripts that
+describe how to transform raw data into a visualizatio  product.
+
+Notify
+Broadcasts a product from a subscription fulfillment.  Also, sends out alerts
+based on ingested data.
+
+Subscribe
+Listens on an e ndpoint fo r URI references to new dat a and determin es which products need to be rebuilt.
+
+Auto Build
+Receives re quests to build products that are under subscripti on.
+
+Collaborate
+ Provi des a commo n poi nt for serving out products that are shared by several clients.
+
+Grid Edit
+ Receives re quests to edit grids. requests to be scripted. Interfaces to a scripting engine to allow edit requests to be scripted.
+
+Adapter
+Enables legacy command line programs to be run as a standard service.
+
+

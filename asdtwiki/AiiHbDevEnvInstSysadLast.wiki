@@ -1,0 +1,28 @@
+= Final System Administration Tasks =
+
+== Setting up Apache httpd and Hudson to Start on Boot ==
+
+To make the servers start on boot you must install a startup
+script and run the chkconfig utility to have the proper symlinks
+put in the proper directories.  The commands are as follows:
+
+{{{
+    cd /etc/rc.d/init.d
+    tar zxf $SWENV_DOWNLOADS/swenv_utils.tgz httpd.swenv
+    tar zxf $SWENV_DOWNLOADS/swenv_utils.tgz hudson.swenv
+    chkconfig --add httpd.swenv
+    chkconfig httpd.swenv on
+    chkconfig --add hudson.swenv
+    chkconfig hudson.swenv on
+}}}
+
+Inspect and edit the startup scripts.  You will probably
+have to change the definition of the SWENV_PROGS environment
+variable to suit your installation.
+
+
+TBD: Backups.  What needs to be backed up.  What could be omitted from
+backups (eg Hudson workspaces).
+
+
+AWIPS II Software Developers' Handbook (AiiHb)

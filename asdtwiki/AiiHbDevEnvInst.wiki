@@ -1,0 +1,67 @@
+= Installing the Software Development Environment =
+[[PageOutline]]
+
+This section describes a proposed software development environment for
+the AWIPS Software Development Team.  NCEP's development environment
+served as a model for this one, and NCEP's environment was patterned
+after the one used by the Raytheon AWIPS II development team in Omaha.
+
+Features of the software development environment:
+ * Integrated with Eclipse.  Eclipse GUIs support code check out and check in.
+ * Distributed.  Clients (Eclipse, for example) can be on machines remote from  the source code repository.  Builds can be started, monitored, and stopped from remote machines.
+ * Automated building.  The build management system can be configured to start  a build whenever the source code changes; or can be configured to check         periodically (every hour, for example) to see if the source code has changed    and start a build if it has.
+ * Web browser based build control.  Builds can be started, monitored, and      stopped using a web browser.
+ * Build and configuration linkage.  For every build it is possible to          determine the version of every source code document.
+ * Issue tracking.  Work assignments and discrepancy reports can  be entered,   modified, and tracked using a web browser interface.  Life cycles can be        defined.
+ * Linkage of source code changes and change authorization documents.  The      system can be configured so that any source code change that is checked in must be linked to a change authorization document in an appropriate life cycle stage.
+ * Version control system supports branching, merging, and tagging.
+ * All open source.  No software licenses, license manager daemons, seat count  limitations, expiration dates, etc.
+
+At a high level, the development environment software stack consists of
+Eclipse, Subversion, Hudson, and Trac.
+
+Eclipse is the integrated development environment (IDE) delivered by
+Raytheon as part of the AWIPS Development Environment (ADE) package.
+The version of Eclipse that Raytheon provides with the ADE includes
+the Subclipse plugin, which provides individual developers with
+a convenient interface for checking source code in and out of the
+Subversion repository.
+
+
+Subversion is the version and configuration management tool.  Subversion
+has its own server, but in this configuration we are not using it.
+Instead, the Apache httpd web server acts as the Subversion server.
+Subversion also has its own client: svn.
+
+Hudson is a build management tool.  In ths development environment
+Hudson builds AWIPS automatically when new source code revisions are
+checked in to the Subversion repository.  Hudson is also web-accessible,
+so builds may be started and monitored remotely, as long as the remote
+machine can make an http connection to the build machine.  Hudson is
+another Subversion client.
+
+Trac is an issue tracking and wiki tool.  In the context of Trac, an
+"issue" can be anything that has a life cycle and must be tracked.
+Examples include bug reports and work assignments.  NCEP's software
+development process uses Trac to track software development tasks.
+
+The NCEP development environment includes another component, USVN, which
+provides a web browser interface for administration of the Subversion
+repository.  A description of USVN setup will be included in  a later
+version of this document.
+
+These software components are used in numerous free and open
+source projects.  They have active web sites and, in most cases, good
+documentation.  For more information on them please see the sites listed
+in the "References and Resources" section of this document.
+
+Much of this section consists of sequences of Unix commands.  The reader
+may be tempted to treat those sequences as scripts and execute them
+accordingly.  In many cases that would be a mistake.  The command
+sequences are intended as procedure descriptions; Unix command lines
+are used as convenient, unambiguous ways of presenting the procedures.
+In most cases it would be safe (and probably efficient) to copy-and-paste
+the commands to save typing.  But some commands will have to be modified.
+
+
+AWIPS II Software Developers' Handbook (AiiHb)

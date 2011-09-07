@@ -1,0 +1,76 @@
+
+% ----- Documentclass directive must come first.
+\documentclass[letterpaper]{book}
+
+% ----- Use package directives to bring in macro packages for 
+% -----    extended functionality.
+
+\usepackage{html}
+
+% ---- Provides url{} command to keep URLs from being broken across lines.
+\usepackage{url}
+
+% ---- Header formatting.  Allow smaller font size, longer titles.
+\usepackage{fancyhdr}
+
+\usepackage{hyperref}
+
+
+\pagestyle{fancy}
+\newcommand{\helv}{%
+% \fontfamily{phv}\fontseries{b}\fontsize{9}{11}\selectfont}
+\fontfamily{phv}\fontseries{b}\fontsize{7}{9}\selectfont}
+\fancyhf{}
+\fancyhead[LE,RO]{\helv \thepage}
+\fancyhead[LO]{\helv \rightmark}
+\fancyhead[RE]{\helv \leftmark}
+
+
+\special{papersize=8.5in,11in}
+
+\author{AWIPS Development Guidelines Working Group}
+
+\title{Draft AWIPS Developers' Handbook}
+\begin{document}
+\maketitle
+\input{AiiDhRh}
+\tableofcontents
+
+% ----- Make block-style rather than indent-style paragraphs.
+\setlength{\parskip}{1ex}
+\setlength{\parindent}{0em}
+
+\begin{raggedright}
+
+% ----- Introduction
+\input{AiiDhIntro}
+
+% ----- Software Development Process
+\input{AiiDhSwPr}
+
+% ----- Coding and Documentation Guidelines
+\input{AiiDhCode}
+
+% ----- Software Development Environment
+\input{AiiDhSwEn/AiiDhSwEn}
+
+% ----- AWIPS Development Tools and Techniques
+\input{AiiDhTools}
+
+% ----- AWIPS Architecture and Implementation Guide
+\input{AiiDhHowto}
+
+
+\appendix
+
+
+% ----- Installing the Software Development Environment
+\input{AiiDhAppInst/AiiDhAppInst}
+
+% ----- References and Resources
+\input{AiiDhAppRes}
+
+\end{raggedright}
+
+\end{document}
+

@@ -1,0 +1,33 @@
+= AWIPS II Architecture =
+[[PageOutline]]
+
+== Major Architectural Components and their Relationships ==
+
+== CAVE Plugins ==
+
+== EDEX Plugins ==
+
+== Data Ingest ==
+
+== Data Access ==
+
+== Command Line Interface ==
+
+== Event Handling ==
+
+== GUI Style and API ==
+
+== Hydromet Libraries ==
+
+== Coordinate Transformations ==
+
+== Units and Unit Conversions ==
+
+== Image Processing ==
+
+
+
+== Re-Wrapped Legacy Code Components ==
+
+
+AWIPS II Software Developers' Handbook (AiiHb)

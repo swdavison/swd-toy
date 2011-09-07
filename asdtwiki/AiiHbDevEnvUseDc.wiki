@@ -1,0 +1,61 @@
+= How To Deliver Code to the Trunk =
+
+The first step is to make sure that your development branch is
+up to date with respect to the trunk.  Please see the section
+titled "How To Update a Branch from the Trunk" and carry out
+those steps.
+
+Next, make sure that both the trunk and your development branch
+build and pass the regression tests.
+
+The procedure for the delivery merge itself is as follows:
+
+{{{
+    # ----- Prepare a log message for the delivery commit.  You might
+    # -----    start by collecting all the short commit messages you
+    # -----    wrote while working.  You should also include any
+    # -----    relevant ticket numbers.
+    export ROOT=http://swdavison.dyndns.org:8080/awips2_repo/AiiDh
+    export BRANCHURL=$ROOT/branches/<yourNameHere>
+    svn log --stop-on-copy $BRANCHURL > ~/commitmessage.tmp
+    # ----- Edit the temporary file to create a commit message.
+    vi ~/commitmessage.tmp
+
+    # ----- Check out a new working copy from the trunk.
+    export TRUNKURL=$ROOT/trunk
+    svn checkout $TRUNKURL
+
+    # ----- Merge your development branch into the new working
+    # -----    copy of the trunk that you just created.
+    cd trunk
+    svn merge --reintegrate $BRANCHURL
+
+    # ----- Build and test the newly-merged working copy.
+
+    # ----- Commit the merged working copy back to the trunk.
+    svn commit --file ~/commitmessage.tmp
+
+    # ----- Clean up.  You don't need that working copy from the
+    # -----    trunk and it's dangerous to leave it around -- if
+    # -----    you forgot it was from the trunk and edited and
+    # -----    committed you would have unwanted changes in the
+    # -----    trunk.
+    cd ..
+    rm -rf trunk
+
+    # ----- More cleanup.  Because of the reintegrate option on the
+    # -----    merge command your development branch is no longer
+    # -----    usable.  Delete it.
+    svn delete $BRANCHURL -m"Removing reintegrated branch."
+}}}
+
+Although you just deleted your development branch it isn't really
+gone.  What you really did was to create a new repository version
+that does not have that branch.  You could still recover the branch
+by specifying an earlier version number in a checkout command.
+
+If you need to create a new development branch for your next
+task please see the section
+titled "How To Create a New Development Branch" (AiiHbDevEnvUseDb).
+
+AWIPS II Software Developers' Handbook (AiiHb)

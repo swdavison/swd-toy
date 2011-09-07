@@ -1,0 +1,235 @@
+
+\section{Install Trac}
+
+
+Trac is a project management and issue tracking system that is designed
+to integrate well with Subversion.  It also provides an integrated wiki.
+
+Trac depends on various packages.  Some of them are downloaded and
+installed automatically by the Trac installer, but setuptools and
+pysqlite, the Python bindings for SQLite, must be installed separately.
+(Trac also depends on SQLite, but we installed that earlier since it is
+required for Subversion.)
+
+\begin{verbatim}
+    export SWENV_PROGS=$HOME/swenv_progs
+    export MYSITEPKGS=$SWENV_PROGS/lib/python2.4/site-packages
+    mkdir -p $MYSITEPKGS
+    export PYTHONPATH="${MYSITEPKGS}:${PYTHONPATH}"
+    export TMP_BLD_DIR=$HOME/tmpblddir
+    rm -rf $TMP_BLD_DIR
+    mkdir $TMP_BLD_DIR
+    cd $TMP_BLD_DIR
+    cp $DOWNLOADS/setuptools-0.6c11-py2.4.egg .
+    sh setuptools-0.6c11-py2.4.egg --prefix=$SWENV_PROGS
+    cd
+    mv $TMP_BLD_DIR $TMP_BLD_DIR.setuptools
+\end{verbatim}
+
+Note that \$PYTHONPATH must include \$MYSITEPKGS whenever setuptools
+is used.  Add the following environment variable definitions to
+~swenv/.bashrc to provide access to both the Trac and Subversion python
+libraries:
+\begin{verbatim}
+    export PYTHONPATH="$SWENV_PROGS/lib/python2.4/site-packages" export
+    PYTHONPATH="${PYTHONPATH}:$SWENV_PROGS/lib/svn-python"
+\end{verbatim}
+
+Build pysqlite:
+
+\begin{verbatim}
+    export TMP_BLD_DIR=$HOME/tmpblddir
+    rm -rf $TMP_BLD_DIR
+    mkdir $TMP_BLD_DIR
+    cd $TMP_BLD_DIR
+    tar zxf $DOWNLOADS/pysqlite-2.6.0.tar.gz
+    cd pysqlite-2.6.0
+\end{verbatim}
+
+Edit the file \$TMP\_BLD\_DIR/pysqlite-2.6.0/setup.cfg.  Set the 
+include\_dirs
+and library\_dirs definitions (which are commented out initially) to be
+as follows:
+\begin{verbatim}
+    include_dirs=/home/swenv/swenv_progs/include
+    library_dirs=/home/swenv/swenv_progs/lib
+\end{verbatim}
+Those definitions will allow pysqlite to find the previously installed
+SQLite files.
+
+\begin{verbatim}
+cd $TMP_BLD_DIR/pysqlite-2.6.0
+python setup.py build >& build.out
+export MYSITEPKGS=$SWENV_PROGS/lib/python2.4/site-packages
+export PYTHONPATH="${MYSITEPKGS}:${PYTHONPATH}"
+export LIBDIR=$TMP_BLD_DIR/pysqlite-2.6.0/build/lib.linux-i686-2.4/pysqlite2
+cp -a $LIBDIR $MYSITEPKGS
+cd
+mv $TMP_BLD_DIR $TMP_BLD_DIR.pysqlite
+
+The following definitions should be in ~swenv/.bashrc:
+export SWENV_PROGS=/home/swenv/swenv_progs
+export PATH="$SWENV_PROGS/bin:${PATH}"
+export DOWNLOADS=/home/swenv/swenv_downloads
+export PYTHONPATH="$SWENV_PROGS/lib/python2.4/site-packages"
+export PYTHONPATH="${PYTHONPATH}:$SWENV_PROGS/lib/svn-python"
+
+Test the pysqlite installation by starting a Python interpreter session
+and giving it the indicated commands: 
+    python 
+        >>> from pysqlite2 import test 
+	>>> test.test()
+You should see a series of periods appear, then a
+message like: "Ran 210 tests in 0.405s".  If no errors are reported the
+installation was successful.
+
+Now install Trac:
+$SWENV_PROGS/bin/easy_install --prefix=$SWENV_PROGS Trac==0.12
+The easy_install utility will download other dependencies and install
+them and Trac into $SWENV_PROGS
+
+Next, set up the Trac environment for the project:
+
+export TRACPROJ=$SWENV_PROGS/tracprojects/awips2trac
+mkdir -p $TRACPROJ
+$SWENV_PROGS/bin/trac-admin $TRACPROJ initenv
+
+Trac-admin will emit various prompts.  Respond as indicated:
+Project Name [My Project]> AWIPS2_DEV
+Database connection string [sqlite:db/trac.db]> (Return to accept default)
+
+You should now see several screens of output ending with a 
+message stating that the environment for AWIPS2_DEV has been 
+successfully created.  
+
+
+There are various ways to deploy trac.  Please see the documentation for
+the alternatives.  For expediency, we will deploy it as a CGI application
+run by httpd.
+
+export TRACPROJ=$SWENV_PROGS/tracprojects/awips2trac
+mkdir -p $SWENV_PROGS/www/trac
+trac-admin $TRACPROJ deploy $SWENV_PROGS/www/trac
+cp $SWENV_PROGS/www/trac/cgi-bin/trac.cgi $SWENV_PROGS/cgi-bin/trac.cgi
+
+
+Add the following lines to the end of $SWENV_PROGS/conf/httpd.conf:
+
+ScriptAlias /trac "/home/swenv/swenv_progs/cgi-bin/trac.cgi"
+<Location "/trac">
+  SetEnv PYTHONPATH /home/swenv/swenv_progs/lib/python2.4/site-packages:/home/swenv/swenv_progs/lib/svn-python
+</Location>
+<Location "/trac/login">
+  AuthType Basic
+  AuthName "Trac"
+  AuthUserFile /home/swenv/swenv_progs/conf/svn-auth-file
+  Require valid-user
+</Location>
+
+
+Set up another Trac project to hold the NCEP wiki.  Eventually we expect
+that the NCEP wiki will be accessible from NOAA's Silver Spring campus
+but at present it is not.  The wiki should be regarded as read-only.
+We will get periodic dumps of the NCEP wiki.  When they are installed
+all changes to the wiki will be lost.
+
+# ----- Set up the Trac project for the NCEP wiki.
+export NCEPTRAC=$SWENV_PROGS/tracprojects/nceptrac
+mkdir -p $NCEPTRAC
+$SWENV_PROGS/bin/trac-admin $NCEPTRAC initenv
+
+# ----- Load the wiki pages provided by NCEP.
+export TD=$HOME/temp_dump_dir
+rm -rf $TD
+mkdir $TD
+cd $TD
+tar zxf $DOWNLOADS/sib-dev-wiki-dump.tar.gz
+export DUMP_PATH=$TD/wiki-dump
+$SWENV_PROGS/bin/trac-admin $NCEPTRAC wiki load $DUMP_PATH
+
+# ----- Deploy the NCEP Trac project as a CGI application.
+export WWWNCEP=$SWENV_PROGS/www/ncep_trac
+mkdir -p $WWWNCEP
+trac-admin $NCEPTRAC deploy $WWWNCEP
+cp $WWWNCEP/cgi-bin/trac.cgi $SWENV_PROGS/cgi-bin/ncep_trac.cgi
+
+Edit $SWENV_PROGS/conf/httpd.conf.  Add the following lines to
+the end of the file.
+
+ScriptAlias /ncep_trac "/home/swenv/swenv_progs/cgi-bin/ncep_trac.cgi"
+<Location "/ncep_trac">
+  SetEnv PYTHONPATH /home/swenv/swenv_progs/lib/python2.4/site-packages:/home/swenv/swenv_progs/lib/svn-python
+</Location>
+<Location "/ncep_trac/login">
+  AuthType Basic
+  AuthName "Trac"
+  AuthUserFile /home/swenv/swenv_progs/conf/svn-auth-file
+  Require valid-user
+</Location>
+
+Restart httpd:
+apachectl restart
+
+Make user homer a Trac administrator by doing the following:
+
+[swenv@svnhost ~]$ trac-admin $SWENV_PROGS/tracprojects/awips2trac
+Trac [...]> permission add homer TRAC_ADMIN
+Trac [...]> permission list homer
+Trac [...]> quit
+
+Now that Homer is an administrator, have him turn on logging:
+Load URL http://svnhost:8080/trac in a browser
+Log in as user homer.  A new tab labeled Admin will appear.
+Click the Admin tab.
+Click Logging
+Select File from the Type pulldown.
+Select Info from the Log level pulldown.
+Click Apply changes.
+
+Also have Homer attach the repository to Trac:
+Click "Repositories"
+In the "Add Repository" block enter a descriptive name in the
+Name keyin.  Say awips2
+In the Directory keyin, enter the absolute path to the repository:
+/home/swenv/repositories/awips2_repo
+
+A new tab -- Browse Source -- appears.  
+Messages appear in the browser window:
+
+The repository "awips2 dev" has been added.  
+You should now run trac-admin $ENV repository resync awips2 
+to synchronize Trac with the repository.
+You should also set up a post-commit hook on the repository to 
+call trac-admin $ENV changeset added "awips2 dev" $REV for each 
+committed changeset.
+
+The ENV environment variable stands for the directory name of the 
+Trac project environment:
+    $SWENV_PROGS/tracprojects/awips2trac
+so the required trac-admin command is:
+trac-admin $SWENV_PROGS/tracprojects/awips2trac repository resync awips2
+
+Reload trac in the browser.  You should now see a new tab 
+titled "Browse Source."
+
+Set up Trac backups.  To do that you will install a script
+to make the backup and a new line in the crontab to run the
+backup script.  To install the backup script:
+    cd $SWENV_PROGS/local/bin
+    tar zxf $SWENV_DOWNLOADS/swenv_utils.tgz backupTrac.py
+
+To add the new line to the cron make a temporary copy of the 
+crontab file:
+    cd
+    crontab -l > crontab.tmp
+Edit crontab.tmp to add the following line:
+5 02,10,15,19 * * *  $SWENV_PROGS/local/bin/backupTrac.py 40 > $SWENV_PROGS/logs/backupTrac.log 2>&1
+
+Now install the new crontab file and delete the temporary copy:
+    crontab  crontab.tmp
+    rm crontab.tmp
+
+
+\end{verbatim}
+
+

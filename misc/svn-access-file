@@ -1,0 +1,47 @@
+
+# Authorization file (access file) for AWIPS Subversion repository.
+# This file is referenced by httpd.conf with a line like:
+#    AuthzSVNAccessFile /home/swenv/swenv_progs/conf/svn-access-file
+# In the Location block for the repository.
+#
+
+# ----- Define a developers group.  It seems to be OK to do it in
+# -----    several lines.
+[groups]
+developers = bart, calkins, davison, homer, hopkins, kretz, mandel, 
+             marge, mcguire, nguyen, olsen, rivera, schotz, zhou
+
+# ----- Allow the anonymous user (that is, everybody) read access
+# -----    to everything to start with.
+[awips2_repo:/]
+* = r
+
+# ----- For all the Raytheon-delivered code, give the developers
+# -----    read and write access.  Anonymous user is denied all 
+# -----    access.
+[awips2_repo:/Installer]
+@developers = rw
+* =
+
+[awips2_repo:/Installer-bundle-example]
+@developers = rw
+* =
+
+[awips2_repo:/ade]
+@developers = rw
+* =
+
+[awips2_repo:/awips]
+@developers = rw
+* =
+
+# ----- For the Handbook (AiiDh) and the miscellaneous tools and
+# -----    config files, allow developers read and write access.
+# -----    The anonymous user keeps the read privilege inherited
+# -----    from the top level.
+[awips2_repo:/AiiDh]
+@developers = rw
+
+[awips2_repo:/misc]
+@developers = rw
+

@@ -1,0 +1,253 @@
+﻿= References and Resources =
+[[PageOutline]]
+
+== AWIPS II Technical Documentation ==
+
+=== ADAM Localization Step-by-Step ===
+
+[[BR]]'''Title:'''  AWIPS II Localization: Step-By-Step Guide (Draft)
+[[BR]]'''Version or Date:'''  Draft 25-feb-2011
+[[BR]]'''File Name:''' AWP.DOC.TOSCAT.LOC-01.00.pdf
+[[BR]]'''Location:''' https://collaborate.nws.noaa.gov/trac/siteconfig/wiki/LocalizationPage
+
+'''Comment:'''[[BR]]
+The "Location" as given above contains a link to the most recent
+version of the document.
+
+Written by Raytheon.  Based on Chapter 15 of the SMM.  Modified for the ADAM    hardware configuration.
+
+Paraphrased from email by Kevin Johnson to awips2dev on 04-mar-2011:
+
+    This document was created to help a user take a 
+	baseline installed version of
+	AWIPS II, which installs as site OAX, and run both EDEX (server
+	side) and CAVE (User Interface) as a site other than OAX.
+
+	The document is written in such a way that it can
+	be used on an AWIPS system (clustered AWIPS II installation) or
+	on ADAM (standalone).  It is not designed for only a baseline
+	system, and all steps are necessary to configure both EDEX and
+	CAVE on ADAM (or any other AWIPS II install for that matter).
+
+
+=== Installation Document (AWIPS I Site)  ===
+
+[[BR]]'''Title:'''  AWIPS II Installation Document
+[[BR]]'''Version or Date:'''  Date in document header: 21-dec-2010
+[[BR]]'''File Name:''' AWIPSII_Installation_Document_r1g2_9.pdf
+[[BR]]'''Location:''' S:\AWIPS\Projects\LOE FFP Task Orders\Training and        Documentation Task Order\Documentation                                          Deliveries\documentsDeliveredWithSoftware\r1g2-9_deliveryDocuments
+
+'''Comment:'''[[BR]]
+Written by Raytheon.  Submitted with delivery of software.  From intro:
+"The following document details the procedures for installation of the
+AWIPS II software build on a pre-existing AWIPS I platform."  32 pp.
+
+
+
+=== ADE Installation Instructions  ===
+
+[[BR]]'''Title:'''  AWIPS Flow Tag Instructions:  ADE Setup
+[[BR]]'''Version or Date:'''  21-feb-2011
+[[BR]]'''File Name:''' AWP_SOTE_FlowTag_ADE_Setup_R1G2-9.pdf
+[[BR]]'''Location:''' S:\AWIPS\Projects\LOE FFP Task Orders\Training and        Documentation Task Order\Documentation                                          Deliveries\documentsDeliveredWithSoftware\r1g2-9_deliveryDocuments
+
+'''Comment:'''[[BR]]
+Written by Raytheon.  Submitted with delivery of software.
+Instructions for installation of the AWIPS Development Environment (ADE)
+on a developer's workstation.  The ADE includes all the AWIPS II source
+and third-party tools required for AWIPS II development.  Full
+installation of the ADE provides the developer with a working AWIPS II
+system, including server and visualization components.  The document
+includes instructions for using the Eclipse debugger to access
+running instances of the server and visualization processes.
+
+
+
+=== Runtime Installation Instructions (Cluster) ===
+
+[[BR]]'''Title:'''  AWIPS Flow Tag Record:  Cluster Deployment
+[[BR]]'''Version or Date:'''  Draft 21-feb-2011
+[[BR]]'''File Name:''' AWP_SOTE_FlowTag_Cluster_Deploymt_R1G2-9.pdf
+[[BR]]'''Location:''' S:\AWIPS\Projects\LOE FFP Task Orders\Training and        Documentation Task Order\Documentation                                          Deliveries\documentsDeliveredWithSoftware\r1g2-9_deliveryDocuments
+
+'''Comment:'''[[BR]]
+Written by Raytheon. Submitted with delivery of software.
+Instructions for deployment of the AWIPS II run time system
+on a clustered hardware configuration (several servers,
+allowing for redundancy and better performance than on
+a standalone sytstem).
+
+
+
+=== Runtime Installation Instructions (Standalone) ===
+
+[[BR]]'''Title:'''  AWIPS Flow Tag Record:  Standalone Deployment
+[[BR]]'''Version or Date:'''  Draft 21-feb-2011
+[[BR]]'''File Name:''' AWP_SOTE_FlowTag_Standalone_Deploymt_R1G2-9.pdf
+[[BR]]'''Location:''' S:\AWIPS\Projects\LOE FFP Task Orders\Training and        Documentation Task Order\Documentation                                          Deliveries\documentsDeliveredWithSoftware\r1g2-9_deliveryDocuments
+
+'''Comment:'''[[BR]]
+Written by Raytheon. Submitted with delivery of software.
+Instructions for deployment of the AWIPS II run time system
+on a single, standalone computer.  All server components and
+the visualization components are installed on the same
+system.
+
+
+
+
+=== NCLADT Wiki  ===
+
+[[BR]]'''Title:'''  National Core Local Application Development Team Wiki
+[[BR]]'''Version or Date:'''  11-mar-2011
+[[BR]]'''File Name:''' NA
+[[BR]]'''Location:''' https://collaborate.nws.noaa.gov/trac/ncladt/wiki
+
+'''Comment:'''[[BR]]
+The National Core Local Applications Development Team provides support
+for the migration of local applications from the legacy AWIPS to AWIPS II.
+As they learn about AWIPS II from porting local applications, team
+members add content to this wiki.
+
+Content includes (but is by no means limited to):
+ *  Many examples of uEngine scripting.  Look in the wiki index under !         EdexUengineScripting.
+ *  How to set up subscriptions (the AWIPS II replacement for triggers).  Look  in the wiki index under !HowToSubscriptions.
+ *  Supporting documentation for training sessions for those porting local      applications.  Look in the wiki index under !MigrationWorkSessions.
+
+If you're looking for information on AWIPS II internals,
+interfaces, and tools this wiki is a good place to start.  Try
+the keyword search facility (available from each wiki page).
+
+
+=== !Raytheon/Omaha External Wiki ===
+
+[[BR]]'''Title:'''  AWIPS2 Omaha
+[[BR]]'''Version or Date:'''  14-mar-2011
+[[BR]]'''File Name:''' NA
+[[BR]]'''Location:''' http://www.awips2omaha.com/trac/awips/wiki/WikiStart
+
+'''Comment:'''[[BR]]
+This wiki is maintained by and for Raytheon's AWIPS II
+developers.  It is not a contract deliverable -- non-Raytheon
+external users have access by Raytheon's courtesy.  Several
+tantalizingly-titled pages (examples: "Creating an EDEX Project",
+"Index of AWIPS II Design Archive") are on servers that
+are inaccessible to users outside Raytheon's firewalls.  Some
+pages may be out of date.  Some apply only to Raytheon's
+development environment.
+
+Examples of recently-modified, useful-looking pages (you can find
+these through the wiki index):
+ *  Delta.  AWIPS II Delta Installs / Upgrades
+ *  metawiki.  This page provides a subject index to the wiki's content.
+ *  Derived parameters.  What they are.  Where the files are located.  How to   define new derived parameters.  How to display them.  Etc.
+ *  Serialization.  AWIPS II Serialization APIs: Thrift-dynamic and JAXB.
+ *  Localization.
+
+
+
+
+=== Short, catchy, descriptive title  ===
+
+[[BR]]'''Title:'''  Formal title, from the title page
+[[BR]]'''Version or Date:'''  Draft 25-feb-2011
+[[BR]]'''File Name:''' AWP.DOC.TOSCAT.LOC-01.00.pdf
+[[BR]]'''Location:''' S:\AWIPS\Projects\LOE FFP Task Orders\Training and        Documentation Task Order\Documentation Deliveries\ADAM Localization Document
+
+'''Comment:'''[[BR]]
+Based on Chapter 15 of the SMM.  Modified for the ADAM hardware configuration.
+
+
+
+=== Short, catchy, descriptive title  ===
+
+[[BR]]'''Title:'''  Formal title, from the title page
+[[BR]]'''Version or Date:'''  Draft 25-feb-2011
+[[BR]]'''File Name:''' AWP.DOC.TOSCAT.LOC-01.00.pdf
+[[BR]]'''Location:''' S:\AWIPS\Projects\LOE FFP Task Orders\Training and        Documentation Task Order\Documentation Deliveries\ADAM Localization Document
+
+'''Comment:'''[[BR]]
+Based on Chapter 15 of the SMM.  Modified for the ADAM hardware configuration.
+
+
+
+=== Short, catchy, descriptive title  ===
+
+[[BR]]'''Title:'''  Formal title, from the title page
+[[BR]]'''Version or Date:'''  Draft 25-feb-2011
+[[BR]]'''File Name:''' AWP.DOC.TOSCAT.LOC-01.00.pdf
+[[BR]]'''Location:''' S:\AWIPS\Projects\LOE FFP Task Orders\Training and        Documentation Task Order\Documentation Deliveries\ADAM Localization Document
+
+'''Comment:'''[[BR]]
+Based on Chapter 15 of the SMM.  Modified for the ADAM hardware configuration.
+
+
+TBD.  Needs lots of cleanup.
+
+{{{
+
+Other docs from S drive (SMM, UM, etc.)
+
+Training videos
+
+PIP w/ architecture
+
+awips2dev mailing list
+
+MDL development workshop of 29, 30 Sep.
+
+Material referenced in SWDT Plan attached to Calkins 19aug2010 0951,
+especially the Briefings, Tutorials, and Documentation subsections in
+Section 4 "Chugach Spin-up Plan"
+
+
+Download the following tar balls into $DOWNLOADS to support the
+procedure above.
+
+httpd-2.2.15.tar.gz
+    Read about it at: http://httpd.apache.org/
+    Get it at: http://www.gtlib.gatech.edu/pub/apache/
+        httpd/httpd-2.2.15.tar.gz
+
+hudson.war
+    Read about it at:  TBD
+    Get it: http://hudson-ci.org/latest/hudson.war
+
+pysqlite-2.6.0.tar.gz
+    Read about it at:  TBD
+    Get it: http://pysqlite.googlecode.com/files/pysqlite-2.6.0.tar.gz
+
+setuptools-0.6c11-py2.4.egg
+    Read about it at:  TBD
+    Get it: http://pypi.python.org/packages/2.4/s/setuptools/
+        setuptools-0.6c11-py2.4.egg
+
+
+subversion-1.6.12.tar.gz
+    Read about it at:  http://subversion.apache.org/source-code.html
+    Get it:  http://subversion.tigris.org/downloads/subversion-1.6.12.tar.gz
+
+subversion-deps-1.6.12.tar.gz
+    Read about it at:  http://subversion.apache.org/source-code.html
+    Get it: http://subversion.tigris.org/downloads/
+        subversion-deps-1.6.12.tar.gz
+
+TBD: Audit this list against $DOWNLOADS and text in this document.
+
+References
+
+Red Book
+
+http://www.awips2omaha.com/trac/awips/wiki/Configuring%20Subclipse
+
+http://trac.edgewall.org/wiki/TracGuide
+
+
+}}}
+
+
+
+
+
+AWIPS II Software Developers' Handbook (AiiHb)
+

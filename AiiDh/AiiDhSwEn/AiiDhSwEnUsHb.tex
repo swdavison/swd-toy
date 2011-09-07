@@ -1,0 +1,75 @@
+
+\subsection{How To Edit this Handbook}
+ 
+Source file: AiiDhSwEnUsHb.tex
+
+This Handbook is maintained in the Subversion
+repository as a set of \LaTeX\ files.
+Members of the AWIPS development community are encouraged to
+submit suggestions for additions, deletions, or changes to
+the AWIPS Development Guidelines Working Group.  You can 
+send suggestions to 
+the document maintainer, whose email address appears in the
+Introduction.
+ 
+You can also edit the Handbook directly, but please
+coordinate with the document maintainer before checking
+anything in to the main trunk of the Subversion repository.
+
+On the other hand, you can check anything you like in to
+your own branch of the repository (how to create that branch
+is described below).  Editing the Handbook is a good way to
+get some familiarity with Subversion operations.
+ 
+You will need package tetex-latex installed on your
+computer.  If you want to build the html version of the
+document you will also need package latex2html.  Both are
+available from the Red Hat or CentOS repositories.
+
+\begin{verbatim}
+    # ----- Set an environment variable for the URL of the repository.
+    export URL=http://swdavison.dyndns.org:8080/awips2_repo/AiiDh
+
+    # ----- Make a branch of the Subversion for yourself.
+    svn copy $URL/trunk $URL/branches/<yourNameHere> -m"New branch"
+
+    # ----- Check the source code out of your new branch.
+    mkdir ~/workarea
+    cd ~/workarea
+    svn checkout $URL/branches/<yourNameHere>
+
+    # ----- Build the document.
+    ./build.sh
+\end{verbatim}
+
+The build process generates several intermediate files and two
+final build products: AiiDh.pdf and the AiiDh subdirectory.
+You can inspect the first with any PDF reader (acroread, gs,
+etc.).  The AiiDh directory contains the HTML version of the
+Handbook, which you can inspect with any web browser.
+
+Now you can edit the tex files with any text editor, rebuild
+the document, and inspect the results.  At any time you can
+check your work in:
+\begin{verbatim}
+    svn commit -m"checkpoint save"
+\end{verbatim}
+
+You may be able to learn what you need to know about
+Latex markup by inspecting the source code files for the
+Handbook and comparing them with the built result (PDF or
+HTML).  If you want more information please see the 
+section titled ``Appendix \ref{ReferencesAndResources}: References and Resources.''
+% section titled Appendix \hyperref[ReferencesAndResources]{References and Resources}.
+In particular, there
+is link to a downloadable book from Wikibooks.  (Search for
+``wikibooks.'')
+
+See the section titled ``How To Deliver Code'' for instructions on 
+how to merge your branch back in to the trunk so that the
+Hudson build posts your new version on the team wiki.  But
+please coordinate that delivery with the document maintainer
+ahead of time.
+
+
+

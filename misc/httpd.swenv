@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# httpd.swenv  Startup script for Apache httpd for AWIPS software dev env
+#
+# chkconfig: - 85 15
+# description: Apache httpd is a Web server.  Used in AWIPS SW dev env \
+#              as Subversion and Trac server.
+# processname: httpd
+# config: /home/swenv/swenv_progs/conf/httpd.conf
+# pidfile: /home/swenv/swenv_progs/logs/httpd.pid
+
+export SWENV_PROGS=/home/swenv/swenv_progs
+
+RETVAL=0
+
+start() {
+	echo "Starting Apache httpd for AWIPS SW Development Environment"
+	su - swenv -c "$SWENV_PROGS/bin/apachectl start"
+	RETVAL=$?
+	return $RETVAL
+}
+
+stop() {
+	echo "Stopping Apache httpd for AWIPS SW Development Environment"
+	su - swenv -c "$SWENV_PROGS/bin/apachectl stop"
+	RETVAL=$?
+	return $RETVAL
+}
+
+restart() {
+	echo "Restarting Apache httpd for AWIPS SW Development Environment"
+	su - swenv -c "$SWENV_PROGS/bin/apachectl restart"
+	RETVAL=$?
+	return $RETVAL
+}
+
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart)
+	restart
+	;;
+  *)
+	echo $"Usage: httpd.swenv {start|stop|restart}"
+	exit 1
+esac
+
+exit $RETVAL
+

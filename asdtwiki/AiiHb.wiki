@@ -1,0 +1,75 @@
+= AWIPS II Software Developers' Handbook (AiiHb) =
+[[PageOutline]]
+
+== Introduction ==
+
+When the human resources become available (and if funding then
+permits), we hope that the original architects and developers of AWIPS
+II will write a technical handbook to  serve as a resource for those
+maintaining AWIPS II and those developing new capabilities for it.
+
+There is, however, immediate need for such a handbook.  And much
+information within its scope is currently being discovered by those who
+are now working on porting local applications, testing interim releases,
+and porting to AWIPS II core components of legacy AWIPS that are not
+within the scope of the Contractor's current task.
+
+This document (AiiHb and its subordinate wiki pages) has two major goals:
+ 1.  To serve as a well-organized repository for information we now have.
+ 1.  To serve as a guide and example to the Contractor of the kind of           documentation we need and expect.
+
+We encourage all AWIPS stakeholders to contribute toward both of those
+goals.  If you ''have'' technical information that could support Goal 1,
+please add it to the Handbook section of the wiki in the appropriate
+place.  If you ''need'' specific technical information and do not see
+a placeholder for it in this document, please add that placeholder;
+empty section headings are valuable contributions toward Goal 2.
+
+If you prefer not to edit the wiki yourself, or if you feel that
+the relevant information is already available elsewhere, please send
+an email to the Handbook maintainer (stowell.davison@noaa.gov) or the
+AWIPS Software Development Team lead (james.calkins@noaa.gov).  We will
+see to it that the material, or a link to it, gets into the handbook.
+
+If you create new pages, please observe the !CamelCase convention of
+starting the name of the new page with the name of the page that is at
+the next level up.  So all page names related to the Handbook will have
+"!AiiHb" as their first five characters.
+
+== Candidate Topics ==
+
+Candidate topics for inclusion in the Handbook: AiiHbTopicList.
+Please edit AiiHbTopicList or send email to stowell.davison@noaa.gov to
+suggest addition or deletion of topics.
+
+
+== Table of Contents ==
+
+ I.  Introduction (AiiHb)
+ I.  Software Development Environment (AiiHbDevEnv)
+  A.  Using the SDE (AiiHbDevEnvUse)
+   1.  Working with Subversion (AiiHbDevEnvUseSu)
+   1.  How To Create a New Development Branch (AiiHbDevEnvUseDb)
+   1.  How To Update a Branch from the Trunk (AiiHbDevEnvUseUb)
+   1.  How To Deliver Code to the Trunk (AiiHbDevEnvUseDc)
+  A.  Administering the SDE
+   1.  How to Merge a New Raytheon Delivery into the Repository                 (AiiHbDevEnvAdminRd)
+  A.  Installing the SDE (AiiHbDevEnvInst)
+   1.  Hardware, Software, Networking (AiiHbDevEnvInstHsw)
+   1.  Preliminary System Administration Tasks (AiiHbDevEnvInstSysadFirst)
+   1.  Install Apache httpd (AiiHbDevEnvInstApache)
+   1.  Install Subversion (AiiHbDevEnvInstSvn)
+   1.  Create Subversion Repository and Load AWIPS II Code (AiiHbDevEnvInstRepo)
+   1.  Set Up Repository Backups (AiiHbDevEnvInstRepoBkp)
+   1.  Connect to Repository from Eclipse and Check Code Out                    (AiiHbDevEnvInstEcl)
+   1.  Install Hudson (AiiHbDevEnvInstHud)
+   1.  Set Up Subversion Access Control (AiiHbDevEnvInstSvnac)
+   1.  Install Trac (AiiHbDevEnvInstTrac)
+   1.  Final System Administration Tasks (AiiHbDevEnvInstSysadLast)
+ I.  Tools for AWIPS Development (AiiHbTools)
+  A.  Eclipse (AiiHbToolsEclipse)
+  B.  Ant (AiiHbToolsAnt)
+  C.  Testing (AiiHbToolsTest)
+ I.  Architecture Guide (AiiHbArch)
+ I.  Development Guide
+ I.  References and Resources (AiiHbRes)

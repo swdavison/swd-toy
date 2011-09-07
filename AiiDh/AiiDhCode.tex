@@ -1,0 +1,123 @@
+
+\chapter{Coding and Documentation Guidelines}
+
+
+The team has found that the following publications contain 
+useful descriptions of best practices.  We recommend that 
+developers read these and observe the principles they
+recommend.
+
+TBD: List of publications.  Davison thinks a short list is
+best.  Like two at the most.  Dave Plummer and Scott Jacobs 
+maintain a small library for their development team.  One of
+the books was Head First Design Patterns.  Can't remember
+the others.  I suggest we identify one or two books that we're all 
+willing to read ourselves and recommend it (or them) here.
+And maybe get a few copies that developers can borrow.
+
+
+When writing and reviewing code, keep in mind that it should
+be comprehensible, maintainable, testable, and usable.
+
+Comprehensible:
+\begin{itemize}
+\item
+Write header comments (aka preamble or prolog) for every file and every
+function.  The header comment should
+explain what the code does and how it fits in to the larger system.
+Assume as little knowledge as possible, but achieve brevity
+and avoid duplication by referring to other project
+documentation, including other source code, as needed.
+See the example code for the formats for file and function 
+header comments.
+\item
+Make your code self-documenting.  Use descriptive variable
+names.  Avoid magic constants.
+\item
+Provide brief internal comments as needed.  
+\item
+Use well-known patterns whenever possible, identify them
+by name in comments and by class and method naming
+conventions.
+\end{itemize}
+
+
+Maintainable:
+\begin{itemize}
+\item
+Search out and use existing utility libraries.
+Don't duplicate functionality even if you think you are providing
+an improved implementation.
+section titled ``Development Case Studies, Infrastructure Capabilities,
+and Interfaces'' for guidance on access to
+AWIPS infrastructure.
+\item
+Include javadoc (or pydoc) comments even for private functions.  
+\item
+Every file should include a revision history in the file
+header comment.  (TBD: Do we really want to require this?  We now 
+have Subversion
+commit comments.  This is additional work for the programmer
+that may not be necessary.)
+\item
+Define variables in the narrowest possible scope.  
+\item
+Strive for simplicity.  Each function should do one thing only.
+\end{itemize}
+
+Usable:
+\begin{itemize}
+\item
+Include javadoc and pydoc comments.  Make sure that interfaces are well
+documented.  
+\item
+Trap bad calls and error conditions.  Throw informative exceptions, 
+use debug logging as appropriate.
+\end{itemize}
+
+Testable:
+\begin{itemize}
+\item
+Include Junit tests for Java classes and methods.
+\item
+Provide tests that can be run unattended (automated
+testing).  Keep in mind that changes to code
+that you've never seen or thought about (class ancestors,
+utility functions) can break your code.  Obviously your 
+code needs to be tested before checkin, but it also needs
+to be retested when other code is checked in.  The only
+practical way to achieve that is by automated testing.
+TBD: Provide a small buildable example to show the preferred
+or required autotesting implementation.  Developers should
+be able to check out the example code, build it in their
+workspace, see the output showing tests passing or failing.
+\end{itemize}
+
+See the code in the Appendix section titled ``Exemplary
+Source Code'' for examples of the required 
+coding practices.  They can be used as templates.  The files 
+are available from the Subversion repository.
+
+TBD: Exemplary files.  What do we need?
+\begin{itemize}
+\item
+Java class
+\item
+Python script
+\item
+Bash shell script
+\item
+Others?
+\end{itemize}
+
+TBD: What else should go in this section?
+\begin{itemize}
+\item
+Package naming convention
+\item
+Directory structure
+\end{itemize}
+
+
+
+

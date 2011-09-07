@@ -1,0 +1,134 @@
+
+\chapter{Software Development Process}
+
+
+
+The software development process is a set of procedures to ensure that:
+\begin{itemize}
+\item
+subsystem design is well-documented;
+\item
+significant design decisions are documented;
+\item
+design and code satisfy approved requirements;
+\item
+design and code conform to project standards;
+\item
+code is saved in a configuration management system;
+\item
+design and code are accessible to other team members;
+\item
+there is adequate opportunity for formal and informal review, 
+discussion, and feedback at appropriate stages in the software 
+development process.
+\end{itemize}
+
+
+For brevity and clarity the work flow description that follows
+refers to Trac (the issue tracking software the team is using)
+and Subversion (the version control software).  Other software
+could support the same work flow.  For specific instructions
+on how to use Trac and Subversion to execute the steps in
+the work flow, please see the section titled ``Using the 
+Software Development Environment.''
+
+\begin{quotation}
+TBD:
+(This is an elaboration of material from the NCEP wiki.  Contains
+some inferences.  NCEP review and comment needed.)
+\end{quotation}
+
+
+Work Flow:
+\begin{itemize}
+\item
+Someone initializes a document (hereafter called a ticket) in the 
+issue tracking system.  It serves the role of a functional requirements 
+statement for a chunk of work.  It might be an enhancement request or 
+it might be a bug report.  The ticket serves as a home for 
+documentation relating to that particular chunk of work.  Anyone can 
+initially create a ticket.  Nothing happens to it until a 
+Development Manager assigns it to a build.  Each ticket has a unique
+number which may be incorporated in code comments to support 
+traceability.  If the ticket is derived from some other requirements
+list or specification, the source requirement should be unambiguously
+identified in the ticket.
+\item
+Development Manager schedules the ticket for a specific build.
+\item
+Development Manager assigns the ticket to a developer.  That 
+assignment is documented in the ticket, and provides the developer 
+with a particular role with respect to the ticket.
+\item
+Developer does analysis and design.  Developer writes up and adds 
+to the ticket:
+\begin{itemize}
+\item
+Detailed requirements statement; 
+\item
+High-level design, including alternatives and justification for 
+selection of alternative to be implemented; 
+\item
+Detailed design;
+\item
+Test plan.
+\end{itemize}
+There may be one or more review stages between addition to the 
+ticket of the above artifacts.  Depending on the expected size 
+of the chunk of work some of the artifacts may be combined.  
+Artifacts may be new text typed added to the ticket or 
+documents attached to the ticket.  Please see the section
+titled ``Using the Software Development Environment'' for
+document templates for the artifacts.  (TBD:  Create the
+templates.  Put the appropriate directory paths for the
+templates in to the Using the SDE section.)
+\item
+Developer does the development work.  She has her own branch 
+within the configuration management system so she can check 
+code in and out without worrying about breaking the build for 
+others.  Periodically she merges code from the trunk into her 
+branch so she is building against recently-delivered code.
+
+The code she writes should be consistent with the design
+documents listed previously.  If necessary, the developer
+should update the design documents.  In that case the
+Development Manager must be notified.  The Development
+Manager may schedule a review.
+\item
+Developer completes the work.  She writes up a delivery statement 
+describing what she has done, adds it to the ticket.  Schedules a review.
+\item
+Review is held.  Assuming code passes review, the developer 
+commits it to the main trunk of the source code control system.  
+She includes the ticket number in her check-in comment.
+As part of the commit process, the source code control system automatically 
+invokes the issue tracking system to link the updated 
+source code versions to the ticket  and to make 
+sure that the developer has the role to check 
+code in against that ticket.  
+\end{itemize}
+
+TBD:  Need to say something about the nature of the reviews:
+\begin{itemize}
+\item
+How flexible?  Full-bore, sit-down reviews in a meeting
+room in some cases, maybe circulation of email in others.
+\item
+By whom?  Peers identified by developer?  Peers assigned
+by the DM?
+\item
+What degree of accountability?  Should reviewers sign
+off on documents?
+\item
+Reviews useful not just for QC, but also to keep team
+members abreast of what others are doing and how they are
+doing it.
+\item
+Need to keep in mind that reviews can be real time-eaters.
+A small group (like two reviewers) specifically assigned, 
+held accountable, and 
+allowed time probably better than a big group.  
+\end{itemize}
+
+
+

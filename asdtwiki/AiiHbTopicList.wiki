@@ -1,0 +1,351 @@
+= Candidate Topics =
+[[PageOutline]]
+
+== Introduction ==
+A topic is in scope for the AWIPS II Developers' Handbook
+(A2DH) if:
+ * It is useful for AWIPS II developers; and
+ * It is not "common knowledge" among software developers.
+The phrase "software developers" includes junior developers and
+developers new to AWIPS II.  It also includes part-time developers,
+for example those whose primary responsibilities might be
+forecasting or hydrometeorological research.
+
+Topics might
+wind up being articles in the A2DH or they might
+be included as links to already-existing documentation.
+ *  If there is significant setup or context related to AWIPS II include it as  an article.
+ *  Otherwise (useful but little A2-specific setup or context), if there is     stable, long-lived, well-written documentation available, include the topic as  a link to that documentation.
+ *  Otherwise (useful, little a2-specific knowledge required, no reliable       documentation available) include it as an article.
+
+These are candidate topics.  Please comment by editing this page
+or sending email to stowell.davison@noaa.gov.  Comments might
+include:
+ *  Suggestions for additional topics;
+ *  Suggestions that topics be dropped;
+ *  Suggestions that topics be combined;
+ *  Suggestions of documentation sources (links, books, etc);
+ *  Offers to write articles;
+ *  Anything else that might enhance the utility of the A2DH.
+
+If you want to, you can tag your comments with one or more greater-than
+signs and your name.  That can facilitate discussion:
+> Davison: Here is a tagged comment by Davison.
+>> Davison: Here is a response to the comment.
+
+[[BR]]
+[[BR]]
+
+== Architecture Topics ==
+
+=== Major Architectural Components ===
+
+ESB, services, etc.
+
+=== Data flow ===
+
+Ingest.  Subscription and notification.  Storage.  Display.
+
+=== CAVE (or RCP) Plugins ===
+
+In the context of CAVE, what is a plugin?  Files, interfaces, etc.
+
+=== EDEX Plugins ===
+
+In the context of EDEX, what is a plugin?  Files, interfaces, etc.
+
+
+[[Br]]
+[[Br]]
+== Development Topics ==
+
+=== Startup ===
+
+Startup in Eclipse.  Startup on command line.
+Startup from an ADE installation.  Startup from a standalone installation.      Other configurations.  Capture of console messages.  Arguments to startup       scripts.  Modes.
+
+
+=== Logging ===
+
+EDEX logging.  CAVE logging.  How to add log messages
+   (logging API).  Controlling the log level and destination.
+
+
+=== Deployment ===
+
+Deployment within ADE environment (mostly from flowtag).
+   Deployment from Eclipse build to standalone and other runtime
+   configurations.  Deployment from command-line build to runtime
+   configurations.
+
+
+=== Canned Data Ingest ===
+
+Where to get data.  How to prepare the files for ingest.  Where
+to drop the files.
+
+
+=== Data Ingest and Access ===
+
+   What do you have to do to add a new set to AWIPS2? Ingest? Storage?
+   Access? Display? Notifications? Ingest monitoring and alarming?
+   hello-world example.
+
+
+=== Command Line Interface ===
+
+
+=== Event Handling ===
+
+   Describe messaging capability that delivers system and user events
+   such as GUI actions, grid changes, error messages, text product
+   completion and other internal and external events.
+   How processes register for event notifications.
+   Mouse events - Examples of how A-II handles mouse events and
+   context-sensitive mouse events, in particular.
+   Keyboard accelerators.
+   Event notification for display changes - Pane swaps, changing frame
+   count, display layers.
+
+
+=== How To Create a CAVE Plugin ===
+
+Detailed, step-by-step creation of hello-world type plugin.
+
+=== How To Create an EDEX Plugin ===
+
+Hello-world example.
+
+
+=== GUI style and API ===
+
+
+=== Hydromet libraries ===
+
+=== Coordinate Transformations ===
+
+=== Units and Unit Conversions ===
+
+=== Image Processing ===
+
+=== Errors and Exceptions ===
+
+[[BR]]
+[[BR]]
+== Tool Topics ==
+
+=== Debugging in Eclipse ===
+
+=== Debugging with jdb ===
+
+=== javap ===
+
+The Java Class File Disassembler.
+
+http://download.oracle.com/javase/1.5.0/docs/tooldocs/windows/javap.html
+
+The javap command disassembles a class file. Its output depends on
+the options used. If no options are used, javap prints out the package,
+protected, and public fields and methods of the classes passed to it.
+
+
+=== jconsole ===
+
+Java Monitoring and Management Console
+
+http://download.oracle.com/javase/6/docs/technotes/tools/share/jconsole.html
+
+The jconsole command launches a graphical console tool that enables
+you to monitor and manage Java applications and virtual machines on a
+local or remote machine.
+
+=== jhat ===
+
+
+Java Heap Analysis Tool
+
+http://download.oracle.com/javase/6/docs/technotes/tools/share/jhat.html
+
+(This tool is experimental and may not be available in future versions
+of the JDK.)
+
+The jhat command parses a java heap dump file and launches a
+webserver. jhat enables you to browse heap dumps using your favorite
+webbrowser. jhat supports pre-designed queries (such as 'show all
+instances of a known class "Foo"') as well as OQL (Object Query Language)
+- a SQL-like query language to query heap dumps. Help on OQL is available
+from the OQL help page shown by jhat. With the default port, OQL help
+is available at http://localhost:7000/oqlhelp/
+
+=== jinfo ===
+
+Jinfo prints Java configuration information for a given Java
+process or core file or a remote debug server. Configuration
+information includes Java System properties and Java virtual
+machine command line flags.
+
+(This utility is unsupported and
+may or may not be available in future versions of the JDK)
+
+http://download.oracle.com/javase/6/docs/technotes/tools/share/jinfo.html
+
+
+=== jmap ===
+
+Memory Map
+
+Jmap prints shared object memory maps or heap memory details of a
+given process or core file or a remote debug server.
+
+(This utility is unsupported and may or may not be available in future
+versions of the JDK.)
+
+http://download.oracle.com/javase/6/docs/technotes/tools/share/jmap.html
+
+
+=== jps ===
+
+Java Virtual Machine Process Status Tool
+
+http://download.oracle.com/javase/1.5.0/docs/tooldocs/share/jps.html
+
+The jps tool lists the instrumented HotSpot Java Virtual Machines (JVMs) on the target system. The tool is limited to reporting information on JVMs for which   it has the access permissions.
+
+
+=== jrunscript ===
+
+Command line script shell
+
+(This tool is experimental and may not be available in future versions of the   JDK.)
+
+http://download.oracle.com/javase/6/docs/technotes/tools/share/jrunscript.html
+
+Jrunscript is a command line script shell. jrunscript supports both
+an interactive (read-eval-print) mode and a batch (-f option) mode of
+script execution. This is a scripting language independent shell. By
+default, JavaScript is the language used, but the -l option can be used
+to specify a different language.
+
+=== jstack ===
+
+Stack Trace
+
+http://download.oracle.com/javase/1.5.0/docs/tooldocs/share/jstack.html
+
+(This utility is unsupported and may or may not be available in future
+versions of the J2SE SDK.)
+
+Jstack prints Java stack traces of Java threads for a given Java
+process or core file or a remote debug server. For each Java frame, the
+full class name, method name, 'bci' (byte code index) and line number, if
+available, are printed. With the -m option, jstack prints both Java and
+native frames of all threads along with the 'pc' (program counter). For
+each native frame, the closest native symbol to 'pc', if available,
+is printed.
+
+
+=== jstat ===
+
+Java Virtual Machine Statistics Monitoring Tool
+
+(This utility is unsupported and may not be available in future
+versions of the J2SE SDK.)
+
+http://download.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html
+
+The jstat tool displays performance statistics for an instrumented
+HotSpot Java virtual machine (JVM). The target JVM is identified by its
+virtual machine identifier, or vmid option described below.
+
+
+=== jvisualvm ===
+
+Java Virtual Machine Monitoring, Troubleshooting, and Profiling Tool
+
+http://download.oracle.com/javase/6/docs/technotes/tools/share/jvisualvm.html
+
+Java VisualVM is an intuitive graphical user interface that provides
+detailed information about Java technology-based applications (Java
+applications) while they are running on a given Java Virtual Machine
+(JVM*). The name Java VisualVM comes from the fact that Java VisualVM
+provides information about the JVM software visually.
+
+=== junit ===
+
+Unit testing framework for java.
+
+
+=== Python Unit Testing ===
+
+unittest
+
+http://docs.python.org/library/unittest.html?highlight
+
+Nose
+
+http://code.google.com/p/python-nose/
+http://linux.die.net/man/1/nosetests
+In r1g1-6:  awips2/python/bin/nosetests
+
+=== Python Debugger ===
+
+pdb — The Python Debugger
+
+http://docs.python.org/library/pdb.html
+
+
+=== Python IDE ===
+
+Idle.
+
+Python IDE with tkinter.
+
+http://docs.python.org/library/idle.html
+
+
+=== pydoc ===
+
+Documentation generator and online help system
+
+http://docs.python.org/library/pydoc.html
+
+The pydoc module automatically generates documentation from Python
+modules. The documentation can be presented as pages of text on the
+console, served to a Web browser, or saved to HTML files.
+
+=== ncdump ===
+
+Convert netCDF file to text form (CDL)
+
+http://www.unidata.ucar.edu/software/netcdf/docs/ncdump-man-1.html
+
+Ncdump generates a text representation of a specified netCDF file
+on standard output. The text representation is in a form called CDL
+(network Common Data form Language) that can be viewed,
+edited, or serve as input to ncgen. ncgen is a companion program that can
+generate a binary netCDF file from a CDL file. Hence ncgen and ncdump
+can be used as inverses to transform the data representation between
+binary and text representations. See ncgen for a description of CDL and
+netCDF representations.
+
+
+=== ncgen ===
+
+From a CDL file generate a netCDF-3 file, a netCDF-4 file or a C program.
+
+http://www.unidata.ucar.edu/software/netcdf/docs/ncgen-man-1.html
+
+Ncgen generates either a netCDF-3 (i.e. classic) binary .nc file,
+a netCDF-4 (i.e. enhanced) binary .nc file or a file in some source
+language that when executed will construct the corresponding binary .nc
+file. The input to ncgen is a description of a netCDF file in a small
+language known as CDL (network Common Data form Language), described
+below. If no options are specified in invoking ncgen, it merely checks
+the syntax of the input CDL file, producing error messages for any
+violations of CDL syntax. Other options can be used, for example, to
+create the corresponding netCDF file, or to generate a C program that
+uses the netCDF C interface to create the netCDF file.
+
+
+AWIPS II Software Developers' Handbook: AiiHb
+

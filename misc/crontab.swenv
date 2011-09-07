@@ -1,0 +1,16 @@
+
+SWENV_PROGS =	/home/swenv/swenv_progs
+PYTHONPATH =	/home/swenv/swenv_progs/lib/python2.4/site-packages:/home/swenv/swenv_progs/lib/svn-python
+
+# ----- Back up the Subversion repository. Also handles purge of old backups.
+38 02,10,15,19 * * *  $SWENV_PROGS/local/bin/backUpRepository.sh > $SWENV_PROGS/logs/bur.log 2>&1
+
+# ----- Back up the Trac project files.  Also handles purge of old backups.
+45 02,10,15,19 * * *  $SWENV_PROGS/local/bin/backupTrac.py 40 > $SWENV_PROGS/logs/backupTrac.log 2>&1
+
+# ----- Rotate Apache httpd logs.  Restarts httpd.  
+47 03 * * sun $SWENV_PROGS/local/bin/rotateHttpdLogFiles.py 10 > $SWENV_PROGS/logs/rotateHttpdLogFiles.log 2>&1
+
+# ----- Rotate Hudson logs.  Restarts hudson.
+49 03 * * sun $SWENV_PROGS/local/bin/rotateHudsonLogFiles.py 10 > $SWENV_PROGS/logs/rotateHudsonLogFiles.log 2>&1
+

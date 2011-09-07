@@ -1,0 +1,43 @@
+= Preliminary System Administration Tasks =
+
+If not already installed, the following packages should be installed
+from the Red Hat repository (that is, via "yum install"):
+ *  autoconf
+ *  gcc
+ *  gcc-c++
+ *  latex2html
+ *  libtool
+ *  libxml2-devel
+ *  openssl-devel
+ *  python-devel
+ *  swig
+ *  zlib-devel
+
+Create user swenv as a normal login user (useradd -m swenv).
+That user may have a password or the appropriate lines may be
+added to sudoers to allow authorized individuals to su to swenv.
+Except as specifically noted, all the installation work is to be
+done by user swenv.  It could, of course, be done by the root user.
+Doing it as a non-privileged user provides some protection from
+inadvertant modification of system files.
+
+For convenience, add the following environment variable definitions
+to ~swenv/.bashrc:
+{{{
+export SWENV_PROGS=$HOME/swenv_progs
+export PATH="$SWENV_PROGS/bin:${PATH}"
+export DOWNLOADS=$HOME/swenv_downloads
+export MYSITEPKGS=$SWENV_PROGS/lib/python2.4/site-packages
+export JAVA_HOME=/awips2/java
+export PYTHONPATH="$SWENV_PROGS/lib/python2.4/site-packages"
+export PYTHONPATH="${PYTHONPATH}:$SWENV_PROGS/lib/svn-python"
+}}}
+
+Download the zip files and tar balls listed in the section titled
+"References and Resources."  Put them into a directory accessible
+by user swenv.  In the rest of this document that directory will
+be referred to as $DOWNLOADS.
+
+
+
+AWIPS II Software Developers' Handbook (AiiHb)

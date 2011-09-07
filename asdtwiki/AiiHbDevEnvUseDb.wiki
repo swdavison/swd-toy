@@ -1,0 +1,30 @@
+= How To Create a New Development Branch =
+
+Each developer should have his or her own development branch.
+In some circumstances one developer might need more than one
+branch.  Subversion maintains branches by keeping track of
+deltas from the trunk -- branches are cheap in terms of
+both disk space and processor load.
+
+Create a branch whenever you need one.  Check code out from
+your branch when you need a working copy.  Commit code back
+to the branch to save your unfinished work (a "checkpoint"
+commit).  Avoid checking out code from the trunk as much as
+possible.  Remember that a working copy checked out from the
+trunk is at risk of being checked back in to the trunk.
+In fact, the only time you really need to check out code
+from the trunk is when you are about to make a final delivery
+of code.
+
+Delete your development branch after you finish each task.  Then
+create a new branch when you need it.
+
+To create a new branch:
+{{{
+    export ROOT=http://swdavison.dyndns.org:8080/awips2_repo/AiiDh
+    svn copy $ROOT/trunk $ROOT/branches/<yourNameHere> -m"Creating new branch"
+}}}
+
+
+
+AWIPS II Software Developers' Handbook (AiiHb)

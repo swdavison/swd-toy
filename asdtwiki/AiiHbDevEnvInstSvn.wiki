@@ -1,0 +1,62 @@
+= Install Subversion =
+
+{{{
+    export TMP_BLD_DIR=$HOME/tmpblddir
+    rm -rf $TMP_BLD_DIR
+    mkdir $TMP_BLD_DIR
+    cd $TMP_BLD_DIR
+    tar zxf $DOWNLOADS/subversion-1.6.12.tar.gz
+    tar zxf $DOWNLOADS/subversion-deps-1.6.12.tar.gz
+    cd subversion-1.6.12
+    export WAPXS="--with-apxs=$SWENV_PROGS/bin/apxs"
+    export JDK="--with-jdk=/awips2/java"
+    export SSL=--with-ssl
+    ./configure --prefix=$SWENV_PROGS $WAPXS $JDK $SSL >& configure.out
+    # Expect a complaint about missing Berkeley DB.  Ignore it.
+    make >& make.out
+    # The following (make check) took a long time (~30 min) on my machine...
+    make check >& makecheck.out
+    # I got "25 tests SKIPPED, 25 tests XFAILED".  XFAIL: expected failure
+    make install >& makeinstall.out
+
+    make swig-py >& makeswigpy.out
+    make check-swig-py  >& makecheckswigpy.out
+    make install-swig-py >& makeinstallswigpy.out
+
+    cd sqlite-amalgamation
+    ./configure --prefix=$SWENV_PROGS >& configure.out
+    make >& make.out
+    make install >& makeinstall.out
+}}}
+
+The install target in the Subversion Makefile does not install
+the Subversion tools, doc, and contrib directories, all of which are
+useful.  Copy those directories to the installation hierarchy.
+
+{{{
+    export TOOLS=$TMP_BLD_DIR/subversion-1.6.12/tools
+    export DOC=$TMP_BLD_DIR/subversion-1.6.12/doc
+    export CONTRIB=$TMP_BLD_DIR/subversion-1.6.12/contrib
+    cp -a $TOOLS $SWENV_PROGS/tools
+    cp -a $DOC $SWENV_PROGS/doc
+    cp -a $CONTRIB $SWENV_PROGS/contrib
+}}}
+
+Clean up:
+{{{
+    cd
+    mv $TMP_BLD_DIR $TMP_BLD_DIR.subversion
+}}}
+
+For convenience during the rest of the install add the
+directory containing the Subversion executables to the
+execution path for user swenv:
+{{{
+    export PATH="/home/swenv/swenv_progs/bin:${PATH}"
+}}}
+Also edit ~swenv/.bashrc and add the above export statement to
+the end of the file.
+
+
+AWIPS II Software Developers' Handbook (AiiHb)
+

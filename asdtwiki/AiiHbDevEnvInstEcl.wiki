@@ -1,0 +1,59 @@
+= Connect to Repository from Eclipse and Check Code Out =
+
+{{{
+
+TBD:
+o  Rewrite this section.  Initial checkout of the whole code base,
+   all the Eclipse projects, is from the trunk.  Note
+   that initial checkout might be via removable media if the connection
+   from the workstation to the Subversion machine is not very fast:
+   Check out trunk to a temp dir on a thumb drive on the Subversion
+   machine.  Developer copies it to his Eclipse workspace.  Then
+   developer creates a branch only of the Eclipse project he is
+   working on, deletes the trunk checkout of that project and checks
+   out the project from the branch.  Or uses svn switch to change
+   that project from a trunk working copyt to a branch working copy.
+   All that needs to be tested.  See setupNotes.hp2.txt 19oct2010
+   and status.txt  15oct2010.
+o  Move this section out of the installation appendix and into
+   "Using the SED" section.
+
+
+The version of Eclipse delivered as part of the ADE includes the Subclipse
+plugin for working with Subversion.  Subclipse provides Eclipse GUIs that
+support fetching code from and committing code to Eclipse repositories.
+The following procedure describes how to bind to a Subversion repository,
+fetch code, and commit code.  It is assumed that you have installed the
+ADE as described in the flow tag.  Any user with a network connection
+to svnhost can carry out this procedure.
+
+
+Start Eclipse
+Deselect "Build Automatically" in the Project menu.
+Window->Open Perspective->Other...->SVN Repository Exploring->OK
+Right-click in the SVN Repositories window (which will be empty at first).
+In the context menu that pops up, select New->Repository Location...
+In the keyin labeled URL enter "http://svnhost:8080/awips2_repo.
+Click Finish.
+
+The repository URL you entered will appear in the SVN Repositories window.
+Expand awips through its various levels until you have expanded the
+"developer" level.
+Click on the first entry under "developer" ("build")
+to select it.
+Scroll down and shift-click on the last entry under
+"developer" (uk.ltd.getahead) so that all the entries under "developer"
+are selected.
+Right click on any one of the selected entries and select
+"Checkout..." from the context menu that pops up.
+Accept all defaults
+on the "Checkout from SVN" dialog that appears.
+
+}}}
+
+
+
+
+AWIPS II Software Developers' Handbook (AiiHb)
+
+~                                                               
